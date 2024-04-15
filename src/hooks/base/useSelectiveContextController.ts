@@ -28,8 +28,7 @@ export function useSelectiveContextController<T>(
   const freshRef = latestRef.current;
 
   const dispatchUpdate = useContext(dispatchUpdateContext);
-  const listenerRef = useContext(UpdateTriggerRefContext);
-
+  useContext(UpdateTriggerRefContext);
   const dispatch = (action: UpdateAction<T>) => dispatchUpdate(action);
   const [isInitialized, setIsInitialized] = useState(false);
 

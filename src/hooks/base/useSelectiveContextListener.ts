@@ -32,18 +32,23 @@ export function useSelectiveContextListener<T>(
 
   const [currentState, setCurrentState] = useState<T>(initialValue);
 
-  let currentListeners = updateTriggers.current[contextKey];
-  if (currentListeners === undefined) {
+  const safeToAddListeners = updateTriggers !== undefined
+
+  let currentListeners = safeToAddListeners ? updateTriggers.current[contextKey] : undefined;
+  if (currentListeners === undefined && safeToAddListeners) {
     updateTriggers.current[contextKey] = {};
     currentListeners = updateTriggers.current[contextKey];
     currentListeners[listenerKey] = setCurrentState;
   }
 
   useEffect(() => {
+    if (currentListeners !== undefined) {
     currentListeners[listenerKey] = setCurrentState;
 
     if (latestRef.current[contextKey] !== undefined) {
       setCurrentState(() => latestRef.current[contextKey]);
+    }
+
     }
 
     return () => {

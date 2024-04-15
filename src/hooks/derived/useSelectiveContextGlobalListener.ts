@@ -7,7 +7,6 @@ export function useSelectiveContextGlobalListener<T>({
   listenerKey,
   initialValue,
 }: UseSelectiveContextParams<T>) {
-  console.log(contextKey, listenerKey);
 
   return useSelectiveContextListener<T>(
     contextKey,

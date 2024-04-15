@@ -61,3 +61,7 @@ export interface UseSelectiveContextListenerReturn<T> {
 
 export type UseSelectiveContextListener<T> = (params: UseSelectiveContextParams<T>
 ) => UseSelectiveContextListenerReturn<T>;
+
+export interface SelectiveContextReadAll<T> {
+  (contextKey: string): T | undefined;
+}

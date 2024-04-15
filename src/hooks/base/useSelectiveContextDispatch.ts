@@ -7,7 +7,7 @@ import {
   useContext,
 } from "react";
 
-import { useSelectiveContextListener } from "./use-selective-context-listener";
+import { useSelectiveContextListener } from "./useSelectiveContextListener";
 import { LatestValueRef, ListenerRefInterface, UpdateAction } from "../../types";
 
 export function useSelectiveContextDispatch<T>(

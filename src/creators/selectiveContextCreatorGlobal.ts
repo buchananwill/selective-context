@@ -1,6 +1,6 @@
 'use client';
 
 
-import {createSelectiveContext} from "./generic-selective-context-creator";
+import {createSelectiveContext} from "./genericSelectiveContextCreator";
 
 export const SelectiveContextGlobal = createSelectiveContext<any>();

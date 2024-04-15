@@ -1,9 +1,9 @@
 "use client";
-import { PropsWithChildren } from "react";
-import { useSelectiveContextManager } from "../hooks/base/use-selective-context-manager";
+import React, { PropsWithChildren } from "react";
+import { useSelectiveContextManager } from "../hooks/base/useSelectiveContextManager";
 import { GenericSelectiveContextProps, LatestValueRef } from "../types";
 
-export default function SelectiveContextManagerGeneric<T>({
+export function SelectiveContextManagerGeneric<T>({
   children,
   dispatchContext,
   latestValueRefContext,

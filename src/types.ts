@@ -30,38 +30,11 @@ export interface UseSelectiveContextParams<T> {
   listenerKey: string;
   initialValue: T;
 }
-
-export interface UseSelectiveContextControllerReturn<T> {
-  currentState: T;
-  dispatchUpdate: (action: UpdateAction<T>) => void;
-}
-
-export interface UseSelectiveContextDispatchReturn<T> {
-  currentState: T;
-  dispatchWithoutControl: Dispatch<SetStateAction<T>>;
-}
-
-export type UseSelectiveContextDispatch<T> = (
-  params: UseSelectiveContextParams<T>,
-) => UseSelectiveContextDispatchReturn<T>;
-
-export type UseSelectiveContextController<T> = (
-  params: UseSelectiveContextParams<T>,
-) => UseSelectiveContextControllerReturn<T>;
-
 export interface GenericSelectiveContextProps<T> {
   listenerRefContext: SelectiveListenersContext<T>;
   latestValueRefContext: SelectiveValueContext<T>;
   dispatchContext: SelectiveDispatchContext<T>;
 }
-
-export interface UseSelectiveContextListenerReturn<T> {
-  currentState: T;
-}
-
-export type UseSelectiveContextListener<T> = (params: UseSelectiveContextParams<T>
-) => UseSelectiveContextListenerReturn<T>;
-
 export interface SelectiveContextReadAll<T> {
   (contextKey: string): T | undefined;
 }

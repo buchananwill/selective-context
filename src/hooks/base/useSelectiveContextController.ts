@@ -1,9 +1,9 @@
 "use client";
 
 
-import { useSelectiveContextListener } from "./useSelectiveContextListener";
+import {useSelectiveContextListener} from "./useSelectiveContextListener";
 import {LatestValueRef, ListenerRefInterface, UpdateAction} from "../../types";
-import {Context, MutableRefObject, useContext, useEffect, useState} from "react";
+import {Context, MutableRefObject, SetStateAction, useCallback, useContext, useEffect, useState} from "react";
 
 export function useSelectiveContextController<T>(
   contextKey: string,
@@ -29,7 +29,10 @@ export function useSelectiveContextController<T>(
 
   const dispatchUpdate = useContext(dispatchUpdateContext);
   useContext(UpdateTriggerRefContext);
-  const dispatch = (action: UpdateAction<T>) => dispatchUpdate(action);
+  const dispatch = useCallback(() => {
+  return (action: SetStateAction<T>) => dispatchUpdate({contextKey: contextKey, update: action});
+
+  }, [contextKey, dispatchUpdate]);
   const [isInitialized, setIsInitialized] = useState(false);
 
 
@@ -47,5 +50,5 @@ export function useSelectiveContextController<T>(
       }
     }
   }, [currentState, isInitialized, contextKey, initialValue, dispatchUpdate]);
-  return { currentState, dispatchUpdate: dispatch };
+  return { currentState, dispatch, dispatchUpdate };
 }

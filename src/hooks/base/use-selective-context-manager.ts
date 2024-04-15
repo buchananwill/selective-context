@@ -1,41 +1,8 @@
-import {
-  Context,
-  Dispatch,
-  MutableRefObject,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef
-} from 'react';
-
-
-export interface ListenerRefInterface<T> {
-  [key: string]: SelectiveListeners<T>;
-}
-
-export interface SelectiveListeners<T> {
-  [key: string]: Dispatch<SetStateAction<T>>;
-}
-
-export interface LatestValueRef<T> {
-  [key: string]: T;
-}
-
-export interface UpdateAction<T> {
-  contextKey: string;
-  update: SetStateAction<T>;
-}
-
-export type SelectiveListenersContext<T> = Context<
-  MutableRefObject<ListenerRefInterface<T>>
->;
-export type SelectiveDispatchContext<T> = Context<Dispatch<UpdateAction<T>>>;
-export type SelectiveValueContext<T> = Context<
-  MutableRefObject<LatestValueRef<T>>
->;
+import { useCallback, useEffect, useRef } from "react";
+import { LatestValueRef, ListenerRefInterface, UpdateAction } from "../../types";
 
 export function useSelectiveContextManager<T>(
-  initialContext: LatestValueRef<T>
+  initialContext: LatestValueRef<T>,
 ) {
   const triggerUpdateRef = useRef({} as ListenerRefInterface<T>);
   const latestValueRef = useRef(initialContext);
@@ -67,7 +34,7 @@ export function useSelectiveContextManager<T>(
 
     if (!listeners) {
       throw new Error(
-        `No listeners found for this context: ${contextKey} with value ${update}`
+        `No listeners found for this context: ${contextKey} with value ${update}`,
       );
     }
 

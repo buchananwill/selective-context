@@ -54,7 +54,7 @@ dispatch: Function to update the state.
 
 ``` 
   const {
-    currentState
+    currentState,
     dispatchWithoutControl
   } = useSelectiveContextGlobalDispatch({
     contextKey: keyForTheValueToSubscribeTo,

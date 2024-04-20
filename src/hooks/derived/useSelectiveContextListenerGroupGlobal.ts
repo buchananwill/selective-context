@@ -13,15 +13,12 @@ export interface UseSelectiveContextGroupParams<T> {
 export function useSelectiveContextListenerGroupGlobal<T>({
                                                          contextKeys,
                                                          listenerKey,
-                                                         initialValue,
                                                      }: UseSelectiveContextGroupParams<T>) {
 
     return useSelectiveContextListenerGroup<T>(
             contextKeys,
             listenerKey,
-            initialValue,
             SelectiveContextGlobal.listenerRefContext,
             SelectiveContextGlobal.latestValueRefContext,
-
     );
 }

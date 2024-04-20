@@ -12,11 +12,9 @@ export function useSelectiveContextListenerGroup<T>(
     const updateTriggers = useContext(updateRefContext);
     const latestRef = useContext(latestValueRefContext);
 
-    const [currentState, setCurrentState] = useState<StringMap<T>>(ObjectPlaceholder);
-
     const safeToAddListeners = updateTriggers !== undefined
-    const safeToTryReadingValues = latestRef !== undefined
 
+    const [currentState, setCurrentState] = useState<StringMap<T>>(ObjectPlaceholder);
     const listenerUpdateArray = useMemo(() => {
         return contextKeys.map(key => {
             const setStateAction: Dispatch<SetStateAction<T>> = (value: SetStateAction<T>) => {

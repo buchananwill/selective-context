@@ -46,15 +46,15 @@ export function useSelectiveContextListenerGroup<T>(
         })
     }, [contextKeys]);
 
-    for (let i = 0; i < contextKeys.length; i++) {
-        let contextKey = contextKeys[i]
-        let currentListeners = safeToAddListeners ? updateTriggers.current[contextKey] : undefined;
-        if (currentListeners === undefined && safeToAddListeners) {
-            updateTriggers.current[contextKey] = {};
-            currentListeners = updateTriggers.current[contextKey];
-            currentListeners[listenerKey] = listenerUpdateArray[i];
-        }
-    }
+    // for (let i = 0; i < contextKeys.length; i++) {
+    //     let contextKey = contextKeys[i]
+    //     let currentListeners = safeToAddListeners ? updateTriggers.current[contextKey] : undefined;
+    //     if (safeToAddListeners && currentListeners === undefined) {
+    //         updateTriggers.current[contextKey] = {};
+    //         currentListeners = updateTriggers.current[contextKey];
+    //         currentListeners[listenerKey] = listenerUpdateArray[i];
+    //     }
+    // }
 
 
     useEffect(() => {

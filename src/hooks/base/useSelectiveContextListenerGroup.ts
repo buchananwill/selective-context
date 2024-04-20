@@ -1,32 +1,21 @@
 import {ListenerRefInterface, StringMap} from "../../types";
 import {Context, Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useMemo, useState,} from "react";
 
+const ObjectPlaceholder = {}
+
 export function useSelectiveContextListenerGroup<T>(
     contextKeys: string[],
     listenerKey: string,
-    fallBackValue: StringMap<T>,
     updateRefContext: Context<MutableRefObject<ListenerRefInterface<T>>>,
     latestValueRefContext: Context<MutableRefObject<StringMap<T>>>,
 ) {
     const updateTriggers = useContext(updateRefContext);
     const latestRef = useContext(latestValueRefContext);
-    // let currentValue: StringMap<T> | undefined = undefined;
-    // try {
-    //     currentValue = latestRef.current;
-    // } catch (e) {
-    //     console.error(e);
-    // }
 
-    // const initialValue =
-    //     currentValue === undefined ||
-    //     currentValue === null ||
-    //     currentValue[contextKeys] === undefined
-    //         ? fallBackValue
-    //         : latestRef.current[contextKeys];
-
-    const [currentState, setCurrentState] = useState<StringMap<T>>(fallBackValue);
+    const [currentState, setCurrentState] = useState<StringMap<T>>(ObjectPlaceholder);
 
     const safeToAddListeners = updateTriggers !== undefined
+    const safeToTryReadingValues = latestRef !== undefined
 
     const listenerUpdateArray = useMemo(() => {
         return contextKeys.map(key => {
@@ -46,18 +35,9 @@ export function useSelectiveContextListenerGroup<T>(
         })
     }, [contextKeys]);
 
-    // for (let i = 0; i < contextKeys.length; i++) {
-    //     let contextKey = contextKeys[i]
-    //     let currentListeners = safeToAddListeners ? updateTriggers.current[contextKey] : undefined;
-    //     if (safeToAddListeners && currentListeners === undefined) {
-    //         updateTriggers.current[contextKey] = {};
-    //         currentListeners = updateTriggers.current[contextKey];
-    //         currentListeners[listenerKey] = listenerUpdateArray[i];
-    //     }
-    // }
-
 
     useEffect(() => {
+        if (safeToAddListeners)
         for (let i = 0; i < contextKeys.length; i++) {
             let contextKey = contextKeys[i]
             let currentListeners = safeToAddListeners ? updateTriggers.current[contextKey] : undefined;
@@ -81,9 +61,10 @@ export function useSelectiveContextListenerGroup<T>(
         const listeners = updateTriggers.current
 
         return () => {
-            for (let contextKey of contextKeys) {
+            for (let i = 0; i < contextKeys.length; i++){
+                let contextKey = contextKeys[i];
                 if (listeners[contextKey] !== undefined) {
-                    delete listeners[contextKey];
+                    delete listeners[contextKey][listenerKey];
                 }
 
             }

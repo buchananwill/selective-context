@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
-import { LatestValueRef, ListenerRefInterface, UpdateAction } from "../../types";
+import { StringMap, ListenerRefInterface, UpdateAction } from "../../types";
 
 export function useSelectiveContextManager<T>(
-  initialContext: LatestValueRef<T>,
+  initialContext: StringMap<T>,
 ) {
   const triggerUpdateRef = useRef({} as ListenerRefInterface<T>);
   const latestValueRef = useRef(initialContext);

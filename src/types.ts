@@ -8,7 +8,7 @@ export interface SelectiveListeners<T> {
     [key: string]: Dispatch<SetStateAction<T>>;
 }
 
-export interface LatestValueRef<T> {
+export interface StringMap<T> {
     [key: string]: T;
 }
 
@@ -22,7 +22,7 @@ export type SelectiveListenersContext<T> = Context<
 >;
 export type SelectiveDispatchContext<T> = Context<Dispatch<UpdateAction<T>>>;
 export type SelectiveValueContext<T> = Context<
-    MutableRefObject<LatestValueRef<T>>
+    MutableRefObject<StringMap<T>>
 >;
 
 export interface UseSelectiveContextParams<T> {

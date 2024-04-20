@@ -11,5 +11,6 @@ export {useSelectiveContextGlobalController} from "./hooks/derived/useSelectiveC
 export {useSelectiveContextGlobalDispatch} from "./hooks/derived/useSelectiveContextGlobalDispatch";
 export { useSelectiveContextGlobalListener } from "./hooks/derived/useSelectiveContextGlobalListener";
 export {useSelectiveContextGlobalReadAll} from "./hooks/derived/useSelectiveContextGlobalReadAll"
+export {useSelectiveContextListenerGroupGlobal} from "./hooks/derived/useSelectiveContextListenerGroupGlobal"
 
 

@@ -1,4 +1,4 @@
-import { LatestValueRef, ListenerRefInterface } from "../../types";
+import { StringMap, ListenerRefInterface } from "../../types";
 import {
   Context,
   MutableRefObject,
@@ -12,11 +12,11 @@ export function useSelectiveContextListener<T>(
   listenerKey: string,
   fallBackValue: T,
   updateRefContext: Context<MutableRefObject<ListenerRefInterface<T>>>,
-  latestValueRefContext: Context<MutableRefObject<LatestValueRef<T>>>,
+  latestValueRefContext: Context<MutableRefObject<StringMap<T>>>,
 ) {
   const updateTriggers = useContext(updateRefContext);
   const latestRef = useContext(latestValueRefContext);
-  let currentValue: LatestValueRef<T> | undefined = undefined;
+  let currentValue: StringMap<T> | undefined = undefined;
   try {
     currentValue = latestRef.current;
   } catch (e) {

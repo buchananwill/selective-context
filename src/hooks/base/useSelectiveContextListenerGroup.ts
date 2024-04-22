@@ -15,6 +15,8 @@ export function useSelectiveContextListenerGroup<T>(
     const safeToAddListeners = updateTriggers !== undefined
 
     const [currentState, setCurrentState] = useState<StringMap<T>>(ObjectPlaceholder);
+
+    // Map the context keys to their own function, each updating the inner string map state.
     const listenerUpdateArray = useMemo(() => {
         return contextKeys.map(key => {
             const setStateAction: Dispatch<SetStateAction<T>> = (value: SetStateAction<T>) => {
@@ -33,7 +35,18 @@ export function useSelectiveContextListenerGroup<T>(
         })
     }, [contextKeys]);
 
+    // If the contextKeys prop changes, remove local entries that are no longer on the listen list.
+    useEffect(() => {
+        setCurrentState(stringMap => {
+            const currentContextKeys = new Set(contextKeys);
+            const filteredMap: StringMap<T> = Object.entries(stringMap)
+                .filter(entry => currentContextKeys.has(entry[0]))
+                .reduce((prev, [currentKey, value]) => ({...prev, [currentKey]: value}), {})
+           return filteredMap
+        })
+    }, [contextKeys, setCurrentState])
 
+    // Use the memoized function list to subscribe to each context key.
     useEffect(() => {
         if (safeToAddListeners)
         for (let i = 0; i < contextKeys.length; i++) {

@@ -83,10 +83,8 @@ initialValue: Initial value of the state slice.
 ### Example Dispatcher 
 
 ``` 
-import {useSelectiveContextGlobalDispatch} from "selective-context";
+import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
 import {Person} from "@/app/data";
-
-const ObjectPlaceholder = {}
 
 export default function PersonDispatch({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
     let {currentState,dispatchWithoutControl} = useSelectiveContextGlobalDispatch<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
@@ -110,11 +108,9 @@ Returns:
 ### Example Listener
 
 ``` 
-import {useSelectiveContextGlobalListener} from "selective-context";
-import {ObjectPlaceholder} from "dto-stores/dist/types";
-import {Person} from "@/app/data";
+import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
 
-const ObjectPlaceholder = {}
+import {Person} from "@/app/data";
 
 export default function PersonListener({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
     let {currentState} = useSelectiveContextGlobalListener<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
@@ -123,14 +119,14 @@ export default function PersonListener({contextKey, listenerKey}:{contextKey: st
 }
 ```
 
-Listen to changes in a specific slice of the global state.
+Listens to changes in a specific slice of the global state.
 
 Returns:
 
 currentState: Current state value.
 
-Contributing
+### Contributing:
 Contributions to improve or expand the package are welcome.
 
-License
+### License
 Licensed under the MIT License.

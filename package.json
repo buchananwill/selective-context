@@ -1,6 +1,6 @@
 {
   "name": "selective-context",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "A key-value store using React context and refs hooks.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

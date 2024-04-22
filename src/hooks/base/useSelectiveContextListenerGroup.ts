@@ -1,7 +1,6 @@
 import {ListenerRefInterface, StringMap} from "../../types";
 import {Context, Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useMemo, useState,} from "react";
-
-const ObjectPlaceholder = {}
+import {ObjectPlaceholder} from "./placeholders";
 
 export function useSelectiveContextListenerGroup<T>(
     contextKeys: string[],

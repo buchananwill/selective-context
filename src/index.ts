@@ -12,5 +12,6 @@ export {useSelectiveContextGlobalDispatch} from "./hooks/derived/useSelectiveCon
 export { useSelectiveContextGlobalListener } from "./hooks/derived/useSelectiveContextGlobalListener";
 export {useSelectiveContextGlobalReadAll} from "./hooks/derived/useSelectiveContextGlobalReadAll"
 export {useSelectiveContextListenerGroupGlobal} from "./hooks/derived/useSelectiveContextListenerGroupGlobal"
+export {ObjectPlaceholder, ArrayPlaceholder} from "./hooks/base/placeholders"
 
 

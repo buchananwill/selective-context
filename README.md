@@ -83,31 +83,44 @@ initialValue: Initial value of the state slice.
 ### Example Dispatcher 
 
 ``` 
-  const {
-    currentState,
-    dispatchWithoutControl
-  } = useSelectiveContextGlobalDispatch({
-    contextKey: keyForTheValueToSubscribeTo,
-    listenerKey: uniqueForThisContext,
-    initialValue: fallbackValueIfControllerNotInitialised
-  });
-```
+import {useSelectiveContextGlobalDispatch} from "selective-context";
+import {Person} from "@/app/data";
 
-Dispatches actions to update the chosen slice of global state.
+const ObjectPlaceholder = {}
+
+export default function PersonDispatch({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
+    let {currentState,dispatchWithoutControl} = useSelectiveContextGlobalDispatch<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
+
+    const handleClick = () => dispatchWithoutControl(personInState =>
+        ({...personInState, name: `${personInState.name}ib`})
+    )
+
+    return <button onClick={handleClick}>
+        {currentState.name}
+    </button>
+
+}
+```
 
 Returns:
 
-currentState: Current state value.
-dispatch: Function to update the state.
+- currentState: Current state value.
+- dispatchWithoutControl: Function to update the state, as the Controller..
 
 ### Example Listener
 
 ``` 
-const { currentState } = useSelectiveContextGlobalListener<T>({
-    contextKey: keyForTheValueToSubscribeTo,
-    listenerKey: uniqueForThisContext,
-    initialValue: fallbackValueIfControllerNotInitialised
-  });
+import {useSelectiveContextGlobalListener} from "selective-context";
+import {ObjectPlaceholder} from "dto-stores/dist/types";
+import {Person} from "@/app/data";
+
+const ObjectPlaceholder = {}
+
+export default function PersonListener({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
+    let {currentState} = useSelectiveContextGlobalListener<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
+
+    return <div>{currentState.name}</div>
+}
 ```
 
 Listen to changes in a specific slice of the global state.

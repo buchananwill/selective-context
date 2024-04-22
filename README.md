@@ -125,6 +125,45 @@ Returns:
 
 currentState: Current state value.
 
+## Advanced: Group Listening
+
+A group of context keys can be listened to with the useSelectiveContextListenerGroupGlobal hook. 
+
+If you are using this hook a lot, it may be worth considering whether conventional context would be a better design pattern for your case.
+
+### Returns:
+
+- currentState: a key:value map of the request contextKeys.
+
+```
+import {
+  ObjectPlaceholder,
+  useSelectiveContextListenerGroupGlobal,
+} from "selective-context";
+import { Person } from "@/app/data";
+
+export default function PersonGroupListener({
+  contextKeys,
+}: {
+  contextKeys: string[];
+}) {
+  let { currentState } = useSelectiveContextListenerGroupGlobal<Person>({
+    contextKeys,
+    listenerKey: "personGroup",
+    initialValue: ObjectPlaceholder,
+  });
+  return (
+    <ul>
+      {Object.values(currentState).map((person) => (
+        <li key={person.id}>{person.name}</li>
+      ))}
+    </ul>
+  );
+}
+ 
+```
+
+
 ### Contributing:
 Contributions to improve or expand the package are welcome.
 

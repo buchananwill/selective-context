@@ -35,5 +35,5 @@ export function useSelectiveContextDispatch<T>(
     [contextKey, dispatch],
   );
 
-  return { currentState, dispatchWithoutControl, dispatch };
+  return { currentState, dispatchWithoutControl };
 }

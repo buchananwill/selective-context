@@ -2,8 +2,9 @@
 This package provides an efficient state management framework using React context, allowing components to manage and subscribe to global state changes selectively.
 
 ## Features
-Selective Updates: Components can subscribe to specific parts of the global state.
-Efficient Rendering: Reduces unnecessary re-renders by managing which updates should affect which components.
+- Selective Updates: Components can subscribe to specific parts of the global state.
+- Efficient Rendering: Reduces unnecessary re-renders by managing which updates should affect which components.
+- Controller-Dispatch-Listener Pattern: Three tiers of subscription hook creates a clear data hierarchy.
 
 ## Installation
 ``` 
@@ -28,16 +29,43 @@ return (
 
 ## Using Hooks
 
-### Example controller:
+Three hooks are available:
+
+1. useSelectiveContextGlobalController
+2. useSelectiveContextGlobalDispatch
+3. useSelectiveContextGlobalListener
+
+Each can do the following:
+
+|            | Initialize a variable | Read access | Write access |
+|------------|-----------------------| ----------- |--------------|
+| Controller | Y                     |           Y | Y            |
+| Dispatch   | N                     |           Y | Y            |
+| Listener   | N                     |           Y | N            |
+
+## Example controller:
 ```
-  const { currentState, dispatchUpdate } = useSelectiveContextGlobalController({
-    contextKey: uniqueKey,
-    listenerKey: uniqueKeyForThisContext,
-    initialValue: couldBeProp
-  }); 
+'use client'
+import {Person} from "@/app/data";
+import {useSelectiveContextGlobalController} from "selective-context";
+
+export default function PersonController({person}:{person: Person}) {
+    let {currentState, dispatch} = useSelectiveContextGlobalController<Person>({
+        contextKey: 'controlledPerson',
+        initialValue: person,
+        listenerKey: 'controller'
+    });
+
+    const handleClick = () => dispatch(personInState =>
+        ({...personInState, name: `${personInState.name}ob`})
+    )
+
+    return <button onClick={handleClick}>
+        {currentState.name}
+    </button>
+}
 ```
 
-Initializes the state that other components may read or modify.
 
 ### Parameters:
 
@@ -47,8 +75,10 @@ initialValue: Initial value of the state slice.
 
 ### Returns:
 
-currentState: Current state value.
-dispatch: Function to update the state.
+- currentState: Current state value.
+- dispatch: Function to update the state, of type Dispatch<SetStateAction<T>>. It accepts both:
+  - T 
+  - a function to mutate T.
 
 ### Example Dispatcher 
 

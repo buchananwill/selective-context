@@ -28,10 +28,9 @@ export function useSelectiveContextController<T>(
   const freshRef = latestRef.current;
 
   const dispatchUpdate = useContext(dispatchUpdateContext);
-  useContext(UpdateTriggerRefContext);
-  const dispatch = useCallback(() => {
-  return (action: SetStateAction<T>) => dispatchUpdate({contextKey: contextKey, update: action});
 
+  const dispatch = useCallback((action: SetStateAction<T>) => {
+    dispatchUpdate({contextKey: contextKey, update: action});
   }, [contextKey, dispatchUpdate]);
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -50,5 +49,5 @@ export function useSelectiveContextController<T>(
       }
     }
   }, [currentState, isInitialized, contextKey, initialValue, dispatchUpdate]);
-  return { currentState, dispatch, dispatchUpdate };
+  return { currentState, dispatch };
 }

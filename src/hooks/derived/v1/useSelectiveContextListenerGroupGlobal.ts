@@ -1,7 +1,7 @@
-import {StringMap, UseSelectiveContextParams} from "../../types";
-import { SelectiveContextGlobal } from "../../creators/selectiveContextCreatorGlobal";
-import { useSelectiveContextListener } from "../base/useSelectiveContextListener";
-import {useSelectiveContextListenerGroup} from "../base/useSelectiveContextListenerGroup";
+import {StringMap, UseSelectiveContextParams} from "../../../types";
+import { SelectiveContextGlobal } from "../../../creators/selectiveContextCreatorGlobal";
+import { useSelectiveContextListener } from "../../base/useSelectiveContextListener";
+import {useSelectiveContextListenerGroup} from "../../base/useSelectiveContextListenerGroup";
 
 export interface UseSelectiveContextGroupParams<T> {
     contextKeys: string[];

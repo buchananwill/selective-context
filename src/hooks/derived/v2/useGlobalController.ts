@@ -1,8 +1,8 @@
-import {UseSelectiveContextParams} from "../../types";
-import {useSelectiveContextController} from "../base/useSelectiveContextController";
-import {SelectiveContextGlobal} from "../../creators/selectiveContextCreatorGlobal";
+import {UseSelectiveContextParams} from "../../../types";
+import {useSelectiveContextController} from "../../base/useSelectiveContextController";
+import {SelectiveContextGlobal} from "../../../creators/selectiveContextCreatorGlobal";
 
-export function useSelectiveContextGlobalController<T>({
+export function useGlobalController<T>({
                                                            contextKey,
                                                            listenerKey,
                                                            initialValue,

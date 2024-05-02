@@ -10,18 +10,17 @@ import {
 import { useSelectiveContextListener } from "./useSelectiveContextListener";
 import { StringMap, ListenerRefInterface, UpdateAction } from "../../types";
 
-export function useSelectiveContextDispatch<T>(
-  contextKey: string,
+export function useSelectiveContextWriteAny<T>(
   dispatchUpdateContext: Context<Dispatch<UpdateAction<T>>>,
 ) {
   const dispatch = useContext(dispatchUpdateContext);
 
-  const dispatchWithoutListen = useCallback(
-    (proposedUpdate: SetStateAction<T>) => {
+  const dispatchWriteAny = useCallback(
+    (contextKey: string, proposedUpdate: SetStateAction<T>) => {
       dispatch({ contextKey, update: proposedUpdate });
     },
-    [contextKey, dispatch],
+    [dispatch],
   );
 
-  return { dispatchWithoutListen };
+  return { dispatchWriteAny };
 }

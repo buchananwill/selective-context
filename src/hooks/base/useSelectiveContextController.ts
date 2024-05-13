@@ -45,7 +45,6 @@ export function useSelectiveContextController<T>(
       dispatchUpdate({ contextKey: contextKey, update: initialValue });
       if (currentState === initialValue) {
         setIsInitialized(true);
-      } else {
       }
     }
   }, [currentState, isInitialized, contextKey, initialValue, dispatchUpdate]);

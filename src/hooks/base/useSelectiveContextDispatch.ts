@@ -1,14 +1,5 @@
-import {
-  Context,
-  Dispatch,
-  MutableRefObject,
-  SetStateAction,
-  useCallback,
-  useContext,
-} from "react";
-
-import { useSelectiveContextListener } from "./useSelectiveContextListener";
-import { StringMap, ListenerRefInterface, UpdateAction } from "../../types";
+import {Context, Dispatch, SetStateAction, useCallback, useContext,} from "react";
+import {UpdateAction} from "../../types";
 
 export function useSelectiveContextDispatch<T>(
   contextKey: string,

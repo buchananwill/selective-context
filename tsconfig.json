@@ -9,7 +9,8 @@
     "skipLibCheck": true,                             // Skip type checking of declaration files
     "forceConsistentCasingInFileNames": true,         // Disallow inconsistently-cased references
     "moduleResolution": "node",                       // Module resolution strategy
-    "jsx": "react"                                    // Support JSX in .tsx files
+    "jsx": "react",
+    "types": ["vitest/globals"]// Support JSX in .tsx files
   },
   "include": [
     "src/**/*"                                       // Include all files in the src folder

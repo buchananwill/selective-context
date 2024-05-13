@@ -3,4 +3,4 @@
 
 import {createSelectiveContext} from "./genericSelectiveContextCreator";
 
-export const SelectiveContextGlobal = createSelectiveContext<never>();
+export const SelectiveContextGlobal = createSelectiveContext<unknown>();

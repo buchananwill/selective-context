@@ -1,7 +1,7 @@
 "use client";
-import React, { PropsWithChildren } from "react";
-import { useSelectiveContextManager } from "../hooks/base/useSelectiveContextManager";
-import { GenericSelectiveContextProps, StringMap } from "../types";
+import React, {PropsWithChildren} from "react";
+import {useSelectiveContextManager} from "../hooks/base/useSelectiveContextManager";
+import {GenericSelectiveContextProps} from "../types";
 
 export function SelectiveContextManagerGeneric<T>({
   children,
@@ -17,7 +17,7 @@ export function SelectiveContextManagerGeneric<T>({
     dispatch,
     triggerUpdateRef: listenerRef,
     contextRef: latestValueRef,
-  } = useSelectiveContextManager({} as StringMap<T>);
+  } = useSelectiveContextManager(new Map());
 
   return (
     <ListenerProvider value={listenerRef}>

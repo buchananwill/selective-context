@@ -8,7 +8,7 @@ export function useSelectiveContextReadAny<T>(
   const mutableRefObject = useContext(context.latestValueRefContext);
   return useCallback(
     function (contextKey) {
-      return mutableRefObject.current[contextKey];
+      return mutableRefObject.current.get(contextKey);
     },
     [mutableRefObject],
   );

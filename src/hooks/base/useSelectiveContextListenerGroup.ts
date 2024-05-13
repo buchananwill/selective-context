@@ -1,6 +1,11 @@
 import {ListenerRefInterface, StringMap} from "../../types";
 import {Context, Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useMemo, useState,} from "react";
-import {ObjectPlaceholder} from "./placeholders";
+
+function computeNextStringMap<T>(oldMap: StringMap<T>, key: string, replacementValue: T) {
+    const newMap = new Map(oldMap); // Create a new Map with the entries of the existing Map
+    newMap.set(key, replacementValue); // Update or add a new key-value pair
+    return newMap
+}
 
 export function useSelectiveContextListenerGroup<T>(
     contextKeys: string[],
@@ -13,7 +18,7 @@ export function useSelectiveContextListenerGroup<T>(
 
     const safeToAddListeners = updateTriggers !== undefined
 
-    const [currentState, setCurrentState] = useState<StringMap<T>>(ObjectPlaceholder);
+    const [currentState, setCurrentState] = useState<StringMap<(T)>>(new Map());
 
     // Map the context keys to their own function, each updating the inner string map state.
     const listenerUpdateArray = useMemo(() => {
@@ -21,13 +26,17 @@ export function useSelectiveContextListenerGroup<T>(
             const setStateAction: Dispatch<SetStateAction<T>> = (value: SetStateAction<T>) => {
                 if (value instanceof Function) {
                     setCurrentState(stringMap => {
-                        const prev = stringMap[key]
+                        const prev = stringMap.get(key)
+                        if (prev === undefined) {
+                            console.error(`Attempted to update '${key}' with a function but no initial value exists.`);
+                            return stringMap; // return the unchanged map if no previous value exists
+                        }
                         const updated = value(prev);
-                        return {...stringMap, [key]: updated}
+                        return computeNextStringMap(stringMap, key, updated)
                     })
 
                 } else {
-                    setCurrentState(stringMap => ({...stringMap, [key]: value}))
+                    setCurrentState(stringMap => computeNextStringMap(stringMap, key, value))
                 }
             };
             return setStateAction
@@ -38,9 +47,9 @@ export function useSelectiveContextListenerGroup<T>(
     useEffect(() => {
         setCurrentState(stringMap => {
             const currentContextKeys = new Set(contextKeys);
-            const filteredMap: StringMap<T> = Object.entries(stringMap)
-                .filter(entry => currentContextKeys.has(entry[0]))
-                .reduce((prev, [currentKey, value]) => ({...prev, [currentKey]: value}), {})
+            const filteredMap: StringMap<T> = new Map(
+                [...stringMap.entries()].filter(entry => currentContextKeys.has(entry[0]))
+            )
            return filteredMap
         })
     }, [contextKeys, setCurrentState])
@@ -50,21 +59,21 @@ export function useSelectiveContextListenerGroup<T>(
         if (safeToAddListeners)
         for (let i = 0; i < contextKeys.length; i++) {
             let contextKey = contextKeys[i]
-            let currentListeners = safeToAddListeners ? updateTriggers.current[contextKey] : undefined;
+            let currentListeners = safeToAddListeners ? updateTriggers.current.get(contextKey) : undefined;
 
             if (currentListeners === undefined && safeToAddListeners) {
-                updateTriggers.current[contextKey] = {};
-                currentListeners = updateTriggers.current[contextKey];
+                currentListeners = new Map()
+                updateTriggers.current.set(contextKey, currentListeners)
+
             }
-
             if (currentListeners !== undefined) {
-                currentListeners[listenerKey] = listenerUpdateArray[i];
+                currentListeners.set(listenerKey, listenerUpdateArray[i])
 
+                const currentValue = latestRef.current.get(contextKey);
 
-                if (latestRef.current[contextKey] !== undefined) {
-                    listenerUpdateArray[i](() => latestRef.current[contextKey]);
+                if (currentValue !== undefined) {
+                    listenerUpdateArray[i](() => currentValue);
                 }
-
             }
         }
 
@@ -73,8 +82,9 @@ export function useSelectiveContextListenerGroup<T>(
         return () => {
             for (let i = 0; i < contextKeys.length; i++){
                 let contextKey = contextKeys[i];
-                if (listeners[contextKey] !== undefined) {
-                    delete listeners[contextKey][listenerKey];
+                const listenersMap = listeners.get(contextKey);
+                if (listenersMap !== undefined) {
+                    listenersMap.delete(listenerKey);
                 }
 
             }

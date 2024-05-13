@@ -35,8 +35,8 @@ export function useSelectiveContextController<T>(
   const [isInitialized, setIsInitialized] = useState(false);
 
 
-  if (freshRef[contextKey] === undefined) {
-    freshRef[contextKey] = initialValue;
+  if (freshRef.get(contextKey) === undefined) {
+    freshRef.set(contextKey, initialValue)
   }
 
 

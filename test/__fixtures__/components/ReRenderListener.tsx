@@ -17,7 +17,7 @@ function createLogEntry(parentComponent: string, renderCount: number) {
 }
 
 // Use a variable to decide which logging function to use
-const logStyle = process.env.REACT_APP_LOG_STYLE;
+const logStyle = process.env.VITE_LOG_STYLE;
 
 
 export const CreateLogEntry = 'createLogEntry';
@@ -28,9 +28,6 @@ export default function ReRenderListener({
   parentComponent: string;
   renderCount: number;
 }) {
-
-  console.log(logStyle)
-
 
   const {
     currentState: { memoizedFunction },

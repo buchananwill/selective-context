@@ -2,30 +2,26 @@
 
 
 import {useSelectiveContextListener} from "./useSelectiveContextListener";
-import {StringMap, ListenersRefInterface, UpdateAction} from "../../types";
-import {Context, MutableRefObject, SetStateAction, useCallback, useContext, useEffect, useState} from "react";
+import {DispatchUpdateContext, LatestValueRefContext, ListenersRefContext} from "../../types";
+import {SetStateAction, useCallback, useContext, useEffect, useState} from "react";
 
 export function useSelectiveContextController<T>(
   contextKey: string,
   listenerKey: string,
   initialValue: T,
-  UpdateTriggerRefContext: Context<
-    MutableRefObject<ListenersRefInterface<T>>
-  >,
-  latestValueRefContext: Context<
-    MutableRefObject<StringMap<T>>
-  >,
-  dispatchUpdateContext: Context<(value: UpdateAction<T>) => void>,
+  listenersRefContext: ListenersRefContext<T>,
+  latestValueRefContext: LatestValueRefContext<T>,
+  dispatchUpdateContext: DispatchUpdateContext<T>,
 ) {
-  const { currentState, latestRef } = useSelectiveContextListener(
+  const { currentState, latestValueRef } = useSelectiveContextListener(
     contextKey,
     listenerKey,
     initialValue,
-    UpdateTriggerRefContext,
+    listenersRefContext,
     latestValueRefContext,
   );
 
-  const freshRef = latestRef.current;
+  const valueMap = latestValueRef.current;
 
   const dispatchUpdate = useContext(dispatchUpdateContext);
 
@@ -35,8 +31,8 @@ export function useSelectiveContextController<T>(
   const [isInitialized, setIsInitialized] = useState(false);
 
 
-  if (freshRef.get(contextKey) === undefined) {
-    freshRef.set(contextKey, initialValue)
+  if (valueMap.get(contextKey) === undefined) {
+    valueMap.set(contextKey, initialValue)
   }
 
 

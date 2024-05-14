@@ -1,7 +1,7 @@
 "use client";
 import {createContext, Dispatch, MutableRefObject} from "react";
 import {
-    DispatchContext,
+    DispatchUpdateContext,
     LatestValueRefContext,
     ListenersRefInterface,
     ListenersRefContext,
@@ -32,6 +32,6 @@ export function createSelectiveContext<T>(): SelectiveContext<T> {
 export interface SelectiveContext<T> {
     latestValueRefContext: LatestValueRefContext<T>;
     listenersRefContext: ListenersRefContext<T>;
-    dispatchContext: DispatchContext<T>;
+    dispatchContext: DispatchUpdateContext<T>;
 }
 

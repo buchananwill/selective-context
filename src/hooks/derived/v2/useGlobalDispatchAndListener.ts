@@ -1,4 +1,4 @@
-import {DispatchContext, LatestValueRefContext, ListenersRefContext, SelectiveContextParams} from "../../../types";
+import {DispatchUpdateContext, LatestValueRefContext, ListenersRefContext, SelectiveContextParams} from "../../../types";
 import {useSelectiveContextDispatchAndListener} from "../../base/useSelectiveContextDispatchAndListener";
 import {SelectiveContextGlobal} from "../../../creators/selectiveContextCreatorGlobal";
 
@@ -13,6 +13,6 @@ export function useGlobalDispatchAndListener<T>({
         initialValue,
         SelectiveContextGlobal.listenersRefContext as ListenersRefContext<T>,
         SelectiveContextGlobal.latestValueRefContext as LatestValueRefContext<T>,
-        SelectiveContextGlobal.dispatchContext as DispatchContext<T>,
+        SelectiveContextGlobal.dispatchContext as DispatchUpdateContext<T>,
     );
 }

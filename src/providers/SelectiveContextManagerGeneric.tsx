@@ -5,7 +5,7 @@ import {GenericSelectiveContextProps} from "../types";
 
 export function SelectiveContextManagerGeneric<T>({
   children,
-  dispatchContext,
+  dispatchUpdateContext,
   latestValueRefContext,
   listenersRefContext,
 }: GenericSelectiveContextProps<T> & PropsWithChildren) {

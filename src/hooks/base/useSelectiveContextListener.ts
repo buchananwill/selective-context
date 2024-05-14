@@ -1,5 +1,5 @@
-import {ListenersRefInterface, StringMap} from "../../types";
-import {Context, MutableRefObject, useContext, useEffect, useState,} from "react";
+import {LatestValueRefContext, ListenersRefContext} from "../../types";
+import {useContext, useEffect, useState,} from "react";
 import {addListenerAndRetrieveLatestValue} from "../../helpers/addListenerAndRetrieveLatestValue";
 import {getCleanUpFunction} from "../../helpers/getCleanUpFunction";
 
@@ -7,8 +7,8 @@ export function useSelectiveContextListener<T>(
     contextKey: string,
     listenerKey: string,
     fallBackValue: T,
-    listenerRefContext: Context<MutableRefObject<ListenersRefInterface<T>>>,
-    latestValueRefContext: Context<MutableRefObject<StringMap<T>>>,
+    listenerRefContext: ListenersRefContext<T>,
+    latestValueRefContext: LatestValueRefContext<T>,
 ) {
     const listenerRef = useContext(listenerRefContext);
     const latestValueRef = useContext(latestValueRefContext);
@@ -51,6 +51,6 @@ export function useSelectiveContextListener<T>(
         return getCleanUpFunction(currentListeners, listenerKey);
     }, [currentListeners, contextKey, listenerKey, latestValueRef]);
 
-    return {currentState, latestRef: latestValueRef};
+    return {currentState, latestValueRef};
 }
 

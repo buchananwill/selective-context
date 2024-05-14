@@ -14,7 +14,7 @@ export interface UpdateAction<T> {
 export type ListenersRefContext<T> = Context<
     MutableRefObject<ListenersRefInterface<T>>
 >;
-export type DispatchContext<T> = Context<Dispatch<UpdateAction<T>>>;
+export type DispatchUpdateContext<T> = Context<Dispatch<UpdateAction<T>>>;
 export type LatestValueRefContext<T> = Context<
     MutableRefObject<StringMap<T>>
 >;
@@ -27,6 +27,6 @@ export interface SelectiveContextParams<T> {
 export interface GenericSelectiveContextProps<T> {
   listenersRefContext: ListenersRefContext<T>;
   latestValueRefContext: LatestValueRefContext<T>;
-  dispatchContext: DispatchContext<T>;
+  dispatchUpdateContext: DispatchUpdateContext<T>;
 }
 export type SelectiveContextReadAll<T> = (contextKey: string) => T | undefined;

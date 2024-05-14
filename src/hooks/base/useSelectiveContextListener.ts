@@ -1,7 +1,9 @@
 import {LatestValueRefContext, ListenersRefContext} from "../../types";
-import {useContext, useEffect, useState,} from "react";
+
+
 import {addListenerAndRetrieveLatestValue} from "../../helpers/addListenerAndRetrieveLatestValue";
 import {getCleanUpFunction} from "../../helpers/getCleanUpFunction";
+import { useContext, useEffect, useState } from "react";
 
 export function useSelectiveContextListener<T>(
     contextKey: string,
@@ -34,7 +36,7 @@ export function useSelectiveContextListener<T>(
     let currentListeners = safeToAddListeners ? listenerRef.current.get(contextKey) : undefined;
     if (currentListeners === undefined && safeToAddListeners) {
         currentListeners = new Map()
-        // currentListeners.set(listenerKey, setCurrentState); I think this is unnecessary as the effect performs the subscription.
+        // currentListeners.set(listenerKey, setCurrentState);// I think this is unnecessary as the effect performs the subscription.
         listenerRef.current.set(contextKey, currentListeners);
     }
 

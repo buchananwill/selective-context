@@ -10,10 +10,11 @@
     "forceConsistentCasingInFileNames": true,         // Disallow inconsistently-cased references
     "moduleResolution": "node",                       // Module resolution strategy
     "jsx": "react",
-    "types": ["vitest/globals"]// Support JSX in .tsx files
+    "types": ["vitest/globals", "react", "react-dom"]// Support JSX in .tsx files
   },
   "include": [
-    "src/**/*"                                       // Include all files in the src folder
+    "src/**/*",// Include all files in the src folder
+    "test/__fixtures__/**/*"
   ],
   "exclude": [
     "node_modules",                                  // Exclude the node_modules directory

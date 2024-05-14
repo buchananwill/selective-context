@@ -7,7 +7,7 @@ import vitest from "eslint-plugin-vitest";
 export default tseslint.config(
     {
         // config with just ignores is the replacement for `.eslintignore`
-        ignores: ['**/build/**', '**/dist/**'],
+        ignores: ['**/build/**', '**/dist/**', "webpack.config.js"],
     },
     eslint.configs.recommended,
     ...tseslint.configs.strict,

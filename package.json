@@ -7,10 +7,17 @@
     "type": "git",
     "url": "git+https://github.com/buchananwill/selective-context.git"
   },
-  "keywords": ["react", "state", "context", "store", "utility", "lightweight"],
+  "keywords": [
+    "react",
+    "state",
+    "context",
+    "store",
+    "utility",
+    "lightweight"
+  ],
   "main": "dist/index.js",
-  "type": "module",
   "types": "dist/index.d.ts",
+  "type": "module",
   "files": [
     "dist/**/*",
     "src"
@@ -20,7 +27,6 @@
     "test:ui": "vitest --ui",
     "build": "tsc"
   },
-
   "license": "MIT",
   "peerDependencies": {
     "react": "^18.3.1"
@@ -35,12 +41,18 @@
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
     "@testing-library/user-event": "^14.5.2",
-    "@types/react": "^18.2.78",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "^1.6.0",
     "eslint": "^9.2.0",
+    "eslint-plugin-n": "^17.7.0",
     "eslint-plugin-vitest": "^0.5.4",
     "jsdom": "^24.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-error-boundary": "^4.0.13",
+    "react-json-tree": "^0.19.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0",
     "vitest": "^1.6.0"

@@ -5,7 +5,7 @@ export function useIntervalToClearValuesWithNoListeners<T>(
     triggerUpdateRef: React.MutableRefObject<Map<string,
         SelectiveListeners<T>>>,
     latestValueRef: React.MutableRefObject<Map<string, T>>,
-    intervalClearRef: React.MutableRefObject<NodeJS.Timeout | undefined>, timeout: number = 30_000
+    intervalClearRef: React.MutableRefObject<NodeJS.Timeout | undefined>, timeout = 30_000
 ) {
     useEffect(() => {
         const cachedListenerRef = triggerUpdateRef.current;

@@ -16,9 +16,4 @@ export {useSelectiveContextReadAny} from "./hooks/base/useSelectiveContextReadAn
 export {useSelectiveContextWriteAny} from "./hooks/base/useSelectiveContextWriteAny";
 
 // Do Not Rename - legacy hooks from V1 API.
-export {useSelectiveContextGlobalController} from "./hooks/derived/v1/useSelectiveContextGlobalController";
-export {useSelectiveContextGlobalDispatch} from "./hooks/derived/v1/useSelectiveContextGlobalDispatch";
-export {useSelectiveContextGlobalListener} from "./hooks/derived/v1/useSelectiveContextGlobalListener";
-export {useSelectiveContextGlobalReadAll} from "./hooks/derived/v1/useSelectiveContextGlobalReadAll"
-export {useSelectiveContextListenerGroupGlobal} from "./hooks/derived/v1/useSelectiveContextListenerGroupGlobal"
 export {ObjectPlaceholder, ArrayPlaceholder} from "./hooks/base/placeholders"

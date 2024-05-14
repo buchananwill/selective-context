@@ -7,9 +7,9 @@ export function SelectiveContextManagerGeneric<T>({
   children,
   dispatchContext,
   latestValueRefContext,
-  listenerRefContext,
+  listenersRefContext,
 }: GenericSelectiveContextProps<T> & PropsWithChildren) {
-  const ListenerProvider = listenerRefContext.Provider;
+  const ListenerProvider = listenersRefContext.Provider;
   const DispatchProvider = dispatchContext.Provider;
   const LatestValueProvider = latestValueRefContext.Provider;
 

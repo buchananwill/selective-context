@@ -1,29 +1,37 @@
 "use client";
 import {createContext, Dispatch, MutableRefObject} from "react";
 import {
-    StringMap,
-    ListenerRefInterface,
     DispatchContext,
-    ListenersRefContext,
     LatestValueRefContext,
+    ListenersRefInterface,
+    ListenersRefContext,
+    StringMap,
     UpdateAction,
 } from "../types";
+
+const emptyRefObject = <T>(): MutableRefObject<StringMap<T>> => ({
+    current: new Map<string, T>()
+});
+
+
+const warnDispatchIsUndefined = () => {
+    console.warn('Dispatch function has been called before being defined.')
+}
 
 export function createSelectiveContext<T>(): SelectiveContext<T> {
     const latestValueRefContext = createContext<
         MutableRefObject<StringMap<T>>
-    >({} as MutableRefObject<StringMap<T>>);
-    const listenerRefContext = createContext<
-        MutableRefObject<ListenerRefInterface<T>>
-    >({} as MutableRefObject<ListenerRefInterface<T>>);
-    const dispatchContext = createContext<Dispatch<UpdateAction<T>>>(() => {
-    });
-    return {latestValueRefContext, listenerRefContext, dispatchContext};
+    >(emptyRefObject());
+    const listenersRefContext = createContext<
+        MutableRefObject<ListenersRefInterface<T>>
+    >(emptyRefObject());
+    const dispatchContext = createContext<Dispatch<UpdateAction<T>>>(warnDispatchIsUndefined);
+    return {latestValueRefContext, listenersRefContext, dispatchContext};
 }
 
 export interface SelectiveContext<T> {
     latestValueRefContext: LatestValueRefContext<T>;
-    listenerRefContext: ListenersRefContext<T>;
+    listenersRefContext: ListenersRefContext<T>;
     dispatchContext: DispatchContext<T>;
 }
 

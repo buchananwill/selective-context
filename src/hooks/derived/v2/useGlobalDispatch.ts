@@ -1,6 +1,6 @@
 import {SelectiveContextGlobal} from "../../../creators/selectiveContextCreatorGlobal";
 import {useSelectiveContextDispatch} from "../../base/useSelectiveContextDispatch";
-import {DispatchContext, LatestValueRefContext, ListenersRefContext} from "../../../types";
+import {DispatchContext} from "../../../types";
 
 export function useGlobalDispatch<T>(contextKey: string) {
     return useSelectiveContextDispatch<T>(

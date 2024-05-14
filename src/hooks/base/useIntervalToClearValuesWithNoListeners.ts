@@ -11,9 +11,9 @@ export function useIntervalToClearValuesWithNoListeners<T>(
         const cachedListenerRef = triggerUpdateRef.current;
         const cachedValueRef = latestValueRef.current;
         intervalClearRef.current = setInterval(() => {
-            for (let [contextKey, listeners] of Object.entries(cachedListenerRef)) {
+            for (const [contextKey, listeners] of cachedListenerRef.entries()) {
                 if (
-                    Object.values(listeners).length === 0 &&
+                    listeners.size === 0 &&
                     cachedValueRef.get(contextKey) !== undefined
                 ) {
                     cachedValueRef.delete(contextKey)

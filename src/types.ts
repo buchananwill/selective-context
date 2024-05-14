@@ -1,6 +1,6 @@
 import { Context, Dispatch, MutableRefObject, SetStateAction } from "react";
 
-export type ListenerRefInterface<T> = Map<string, SelectiveListeners<T>>
+export type ListenersRefInterface<T> = Map<string, SelectiveListeners<T>>
 
 export type SelectiveListeners<T> = Map<string, Dispatch<SetStateAction<T>>>
 
@@ -12,23 +12,21 @@ export interface UpdateAction<T> {
 }
 
 export type ListenersRefContext<T> = Context<
-    MutableRefObject<ListenerRefInterface<T>>
+    MutableRefObject<ListenersRefInterface<T>>
 >;
 export type DispatchContext<T> = Context<Dispatch<UpdateAction<T>>>;
 export type LatestValueRefContext<T> = Context<
     MutableRefObject<StringMap<T>>
 >;
 
-export interface UseSelectiveContextParams<T> {
+export interface SelectiveContextParams<T> {
   contextKey: string;
   listenerKey: string;
   initialValue: T;
 }
 export interface GenericSelectiveContextProps<T> {
-  listenerRefContext: ListenersRefContext<T>;
+  listenersRefContext: ListenersRefContext<T>;
   latestValueRefContext: LatestValueRefContext<T>;
   dispatchContext: DispatchContext<T>;
 }
-export interface SelectiveContextReadAll<T> {
-  (contextKey: string): T | undefined;
-}
+export type SelectiveContextReadAll<T> = (contextKey: string) => T | undefined;

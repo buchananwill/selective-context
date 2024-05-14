@@ -1,21 +1,21 @@
 import {useCallback, useRef} from "react";
-import {ListenerRefInterface, StringMap, UpdateAction} from "../../types";
+import {ListenersRefInterface, StringMap, UpdateAction} from "../../types";
 import {useIntervalToClearValuesWithNoListeners} from "./useIntervalToClearValuesWithNoListeners";
 
 export function useSelectiveContextManager<T>(
     initialContext: StringMap<T>,
 ) {
-    const triggerUpdateRef = useRef({} as ListenerRefInterface<T>);
+    const listenerRef = useRef<ListenersRefInterface<T>>(new Map());
     const latestValueRef = useRef(initialContext);
 
     const intervalClearRef = useRef<NodeJS.Timeout>();
 
-    useIntervalToClearValuesWithNoListeners(triggerUpdateRef, latestValueRef, intervalClearRef);
+    useIntervalToClearValuesWithNoListeners(listenerRef, latestValueRef, intervalClearRef);
 
     const dispatch = useCallback((action: UpdateAction<T>) => {
         const {contextKey, update} = action;
         const currentElement = latestValueRef.current.get(contextKey);
-        const listeners = triggerUpdateRef.current.get(contextKey);
+        const listeners = listenerRef.current.get(contextKey);
 
         if (!listeners) {
             console.warn(`Attempted to dispatch an update to '${contextKey}' with no listeners.`);
@@ -37,7 +37,7 @@ export function useSelectiveContextManager<T>(
 
         if (currentElement !== newValue) {
             try {
-                Object.values(listeners).forEach((l) => {
+                listeners.forEach((l) => {
                     l(newValue);
                 });
             } catch (e) {
@@ -47,5 +47,5 @@ export function useSelectiveContextManager<T>(
         }
     }, []);
 
-    return {dispatch, triggerUpdateRef, contextRef: latestValueRef};
+    return {dispatch, triggerUpdateRef: listenerRef, contextRef: latestValueRef};
 }

@@ -2,7 +2,7 @@
 
 
 import {useSelectiveContextListener} from "./useSelectiveContextListener";
-import {StringMap, ListenerRefInterface, UpdateAction} from "../../types";
+import {StringMap, ListenersRefInterface, UpdateAction} from "../../types";
 import {Context, MutableRefObject, SetStateAction, useCallback, useContext, useEffect, useState} from "react";
 
 export function useSelectiveContextController<T>(
@@ -10,7 +10,7 @@ export function useSelectiveContextController<T>(
   listenerKey: string,
   initialValue: T,
   UpdateTriggerRefContext: Context<
-    MutableRefObject<ListenerRefInterface<T>>
+    MutableRefObject<ListenersRefInterface<T>>
   >,
   latestValueRefContext: Context<
     MutableRefObject<StringMap<T>>

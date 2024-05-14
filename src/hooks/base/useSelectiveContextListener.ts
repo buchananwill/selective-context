@@ -1,57 +1,72 @@
-import {ListenerRefInterface, StringMap} from "../../types";
-import {Context, MutableRefObject, useContext, useEffect, useState,} from "react";
+import {ListenersRefInterface, SelectiveListeners, StringMap} from "../../types";
+import {Context, Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useState,} from "react";
+
+export function getCleanUpFunction<T>(currentListeners: StringMap<Dispatch<SetStateAction<T>>> | undefined, listenerKey: string) {
+    return () => {
+        if (currentListeners) {
+            currentListeners.delete(listenerKey);
+        }
+    };
+}
+
+export function addListenerAndRetrieveLatestValue<T>(contextKey: string, listenerKey: string, currentListeners: SelectiveListeners<T> | undefined, latestValueRef: MutableRefObject<StringMap<T>>, setCurrentState: Dispatch<SetStateAction<T>>) {
+    if (currentListeners !== undefined) {
+        currentListeners.set(listenerKey, setCurrentState)
+        const latestValue = latestValueRef.current.get(contextKey);
+        if (latestValue !== undefined) {
+            setCurrentState(latestValue);
+        }
+    }
+}
 
 export function useSelectiveContextListener<T>(
-  contextKey: string,
-  listenerKey: string,
-  fallBackValue: T,
-  updateRefContext: Context<MutableRefObject<ListenerRefInterface<T>>>,
-  latestValueRefContext: Context<MutableRefObject<StringMap<T>>>,
+    contextKey: string,
+    listenerKey: string,
+    fallBackValue: T,
+    listenerRefContext: Context<MutableRefObject<ListenersRefInterface<T>>>,
+    latestValueRefContext: Context<MutableRefObject<StringMap<T>>>,
 ) {
-  const updateTriggers = useContext(updateRefContext);
-  const latestRef = useContext(latestValueRefContext);
-  // let currentValue: StringMap<T>
-      // | undefined;
+    const listenerRef = useContext(listenerRefContext);
+    const latestValueRef = useContext(latestValueRefContext);
+    // let currentValue: StringMap<T>
+    // | undefined;
 
-  const currentValue = latestRef.current.get(contextKey);
-  let initialValue: T = fallBackValue
-  if (currentValue !== undefined) {
-    initialValue = currentValue
-  }
-  // const initialValue =
-  //   currentValue === undefined ||
-  //   currentValue === null ||
-  //   currentValue.get(contextKey) === undefined
-  //     ? fallBackValue
-  //     : currentValue.get(contextKey);
+    const currentValue = latestValueRef.current.get(contextKey);
+    let initialValue: T = fallBackValue
+    if (currentValue !== undefined) {
+        initialValue = currentValue
+    }
+    // const initialValue =
+    //   currentValue === undefined ||
+    //   currentValue === null ||
+    //   currentValue.get(contextKey) === undefined
+    //     ? fallBackValue
+    //     : currentValue.get(contextKey);
 
-  const [currentState, setCurrentState] = useState<T>(initialValue);
+    const [currentState, setCurrentState] = useState<T>(initialValue);
 
-  const safeToAddListeners = updateTriggers !== undefined
+    const safeToAddListeners = listenerRef.current !== undefined
 
-  let currentListeners = safeToAddListeners ? updateTriggers.current.get(contextKey) : undefined;
-  if (currentListeners === undefined && safeToAddListeners) {
-    currentListeners = new Map()
-    currentListeners.set(listenerKey, setCurrentState);
-    updateTriggers.current.set(contextKey, currentListeners);
-  }
-
-  useEffect(() => {
-    if (currentListeners !== undefined) {
-    currentListeners.set(listenerKey, setCurrentState)
-      const latestValue = latestRef.current.get(contextKey);
-    if (latestValue !== undefined) {
-      setCurrentState(latestValue);
+    let currentListeners = safeToAddListeners ? listenerRef.current.get(contextKey) : undefined;
+    if (currentListeners === undefined && safeToAddListeners) {
+        currentListeners = new Map()
+        // currentListeners.set(listenerKey, setCurrentState); I think this is unnecessary as the effect performs the subscription.
+        listenerRef.current.set(contextKey, currentListeners);
     }
 
-    }
+    useEffect(() => {
+        addListenerAndRetrieveLatestValue(contextKey, listenerKey, currentListeners, latestValueRef, setCurrentState)
+        // if (currentListeners !== undefined) {
+        // currentListeners.set(listenerKey, setCurrentState)
+        //   const latestValue = latestValueRef.current.get(contextKey);
+        // if (latestValue !== undefined) {
+        //   setCurrentState(latestValue);
+        // }
+        //
+        // }
+        return getCleanUpFunction(currentListeners, listenerKey);
+    }, [currentListeners, contextKey, listenerKey, latestValueRef]);
 
-    return () => {
-      if (currentListeners) {
-        currentListeners.delete(listenerKey);
-      }
-    };
-  }, [currentListeners, contextKey, listenerKey, latestRef]);
-
-  return { currentState, latestRef };
+    return {currentState, latestRef: latestValueRef};
 }
+

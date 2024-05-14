@@ -1,12 +1,5 @@
-import {
-    DispatchContext,
-    LatestValueRefContext,
-    ListenersRefContext,
-    StringMap,
-    UseSelectiveContextParams
-} from "../../../types";
-import { SelectiveContextGlobal } from "../../../creators/selectiveContextCreatorGlobal";
-import { useSelectiveContextListener } from "../../base/useSelectiveContextListener";
+import {LatestValueRefContext, ListenersRefContext, StringMap} from "../../../types";
+import {SelectiveContextGlobal} from "../../../creators/selectiveContextCreatorGlobal";
 import {useSelectiveContextListenerGroup} from "../../base/useSelectiveContextListenerGroup";
 
 export interface UseSelectiveContextGroupParams<T> {
@@ -24,7 +17,7 @@ export function useSelectiveContextListenerGroupGlobal<T>({
     return useSelectiveContextListenerGroup<T>(
             contextKeys,
             listenerKey,
-        SelectiveContextGlobal.listenerRefContext as ListenersRefContext<T>,
+        SelectiveContextGlobal.listenersRefContext as ListenersRefContext<T>,
         SelectiveContextGlobal.latestValueRefContext as LatestValueRefContext<T>,
     );
 }

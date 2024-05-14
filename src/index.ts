@@ -1,4 +1,5 @@
 // V2 API - shorter hook names. Dispatch now separate from DispatchAndListener
+
 export {useGlobalController} from "./hooks/derived/v2/useGlobalController";
 export {useGlobalDispatch} from "./hooks/derived/v2/useGlobalDispatch";
 export {useGlobalDispatchAndListener} from "./hooks/derived/v2/useGlobalDispatchAndListener";
@@ -6,6 +7,8 @@ export {useGlobalListener} from "./hooks/derived/v2/useGlobalListener";
 export {useGlobalListenerGroup} from "./hooks/derived/v2/useGlobalListenerGroup";
 export {useGlobalReadAny} from "./hooks/derived/v2/useGlobalReadAny";
 export {useGlobalWriteAny} from "./hooks/derived/v2/useGlobalWriteAny";
+export {ControllerComponent} from "./components/ControllerComponent";
+
 
 // Underlying API
 export {createSelectiveContext} from "./creators/genericSelectiveContextCreator";

@@ -8,13 +8,13 @@ import {
 } from "react";
 
 import { useSelectiveContextListener } from "./useSelectiveContextListener";
-import { StringMap, ListenerRefInterface, UpdateAction } from "../../types";
+import { StringMap, ListenersRefInterface, UpdateAction } from "../../types";
 
 export function useSelectiveContextDispatchAndListener<T>(
   contextKey: string,
   listenerKey: string,
   fallBackValue: T,
-  updateRefContext: Context<MutableRefObject<ListenerRefInterface<T>>>,
+  updateRefContext: Context<MutableRefObject<ListenersRefInterface<T>>>,
   latestValueRefContext: Context<MutableRefObject<StringMap<T>>>,
   dispatchUpdateContext: Context<Dispatch<UpdateAction<T>>>,
 ) {

@@ -1,5 +1,6 @@
-import {ListenerRefInterface, StringMap} from "../../types";
-import {Context, Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useMemo, useState,} from "react";
+import {LatestValueRefContext, ListenersRefContext, StringMap} from "../../types";
+import {Dispatch, SetStateAction, useContext, useEffect, useMemo, useState,} from "react";
+import {addListenerAndRetrieveLatestValue, getCleanUpFunction} from "./useSelectiveContextListener";
 
 function computeNextStringMap<T>(oldMap: StringMap<T>, key: string, replacementValue: T) {
     const newMap = new Map(oldMap); // Create a new Map with the entries of the existing Map
@@ -10,13 +11,15 @@ function computeNextStringMap<T>(oldMap: StringMap<T>, key: string, replacementV
 export function useSelectiveContextListenerGroup<T>(
     contextKeys: string[],
     listenerKey: string,
-    updateRefContext: Context<MutableRefObject<ListenerRefInterface<T>>>,
-    latestValueRefContext: Context<MutableRefObject<StringMap<T>>>,
+    listenersRefContext: ListenersRefContext<T>,
+    latestValueRefContext: LatestValueRefContext<T>,
 ) {
-    const updateTriggers = useContext(updateRefContext);
-    const latestRef = useContext(latestValueRefContext);
+    const listenersRef = useContext(listenersRefContext);
+    const latestValueRef = useContext(latestValueRefContext);
 
-    const safeToAddListeners = updateTriggers !== undefined
+    if (listenersRef === undefined || latestValueRef === undefined) {
+        throw Error(`Could not find either listeners and/or latestValue refs: ${listenersRef}, ${latestValueRef}`)
+    }
 
     const [currentState, setCurrentState] = useState<StringMap<(T)>>(new Map());
 
@@ -56,40 +59,43 @@ export function useSelectiveContextListenerGroup<T>(
 
     // Use the memoized function list to subscribe to each context key.
     useEffect(() => {
-        if (safeToAddListeners)
+
         for (let i = 0; i < contextKeys.length; i++) {
-            let contextKey = contextKeys[i]
-            let currentListeners = safeToAddListeners ? updateTriggers.current.get(contextKey) : undefined;
+            const contextKey = contextKeys[i]
+            let currentListeners = listenersRef.current.get(contextKey) ;
 
-            if (currentListeners === undefined && safeToAddListeners) {
+            if (currentListeners === undefined) {
                 currentListeners = new Map()
-                updateTriggers.current.set(contextKey, currentListeners)
+                listenersRef.current.set(contextKey, currentListeners)
 
             }
-            if (currentListeners !== undefined) {
-                currentListeners.set(listenerKey, listenerUpdateArray[i])
-
-                const currentValue = latestRef.current.get(contextKey);
-
-                if (currentValue !== undefined) {
-                    listenerUpdateArray[i](() => currentValue);
-                }
-            }
+            addListenerAndRetrieveLatestValue(contextKey, listenerKey, currentListeners, latestValueRef, listenerUpdateArray[i])
+            // if (currentListeners !== undefined) {
+            //     currentListeners.set(listenerKey, listenerUpdateArray[i])
+            //
+            //     const currentValue = latestValueRef.current.get(contextKey);
+            //
+            //     if (currentValue !== undefined) {
+            //         listenerUpdateArray[i](() => currentValue);
+            //     }
+            // }
         }
 
-        const listeners = updateTriggers.current
+        const listeners = listenersRef.current
 
-        return () => {
-            for (let i = 0; i < contextKeys.length; i++){
-                let contextKey = contextKeys[i];
+        const cleanUpHookArray: (() => void)[] = []
+
+            for (const contextKey of contextKeys) {
                 const listenersMap = listeners.get(contextKey);
-                if (listenersMap !== undefined) {
-                    listenersMap.delete(listenerKey);
-                }
+                cleanUpHookArray.push(getCleanUpFunction(listenersMap, listenerKey))
+                // if (listenersMap !== undefined) {
+                //     listenersMap.delete(listenerKey);
+                // }
 
             }
-        };
-    }, [contextKeys, listenerKey, latestRef]);
+
+        return () => cleanUpHookArray.forEach(fn => fn())
+    }, [contextKeys, listenerKey, latestValueRef]);
 
     return {currentState};
 }

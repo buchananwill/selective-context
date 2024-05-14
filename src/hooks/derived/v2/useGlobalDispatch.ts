@@ -5,6 +5,6 @@ import {DispatchUpdateContext} from "../../../types";
 export function useGlobalDispatch<T>(contextKey: string) {
     return useSelectiveContextDispatch<T>(
         contextKey,
-        SelectiveContextGlobal.dispatchContext as DispatchUpdateContext<T>
+        SelectiveContextGlobal.dispatchUpdateContext as DispatchUpdateContext<T>
     );
 }

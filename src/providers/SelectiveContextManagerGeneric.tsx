@@ -10,7 +10,7 @@ export function SelectiveContextManagerGeneric<T>({
   listenersRefContext,
 }: GenericSelectiveContextProps<T> & PropsWithChildren) {
   const ListenerProvider = listenersRefContext.Provider;
-  const DispatchProvider = dispatchContext.Provider;
+  const DispatchProvider = dispatchUpdateContext.Provider;
   const LatestValueProvider = latestValueRefContext.Provider;
 
   const {

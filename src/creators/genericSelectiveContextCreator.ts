@@ -25,13 +25,13 @@ export function createSelectiveContext<T>(): SelectiveContext<T> {
     const listenersRefContext = createContext<
         MutableRefObject<ListenersRefInterface<T>>
     >(emptyRefObject());
-    const dispatchContext = createContext<Dispatch<UpdateAction<T>>>(warnDispatchIsUndefined);
-    return {latestValueRefContext, listenersRefContext, dispatchContext};
+    const dispatchUpdateContext = createContext<Dispatch<UpdateAction<T>>>(warnDispatchIsUndefined);
+    return {latestValueRefContext, listenersRefContext, dispatchUpdateContext};
 }
 
 export interface SelectiveContext<T> {
     latestValueRefContext: LatestValueRefContext<T>;
     listenersRefContext: ListenersRefContext<T>;
-    dispatchContext: DispatchUpdateContext<T>;
+    dispatchUpdateContext: DispatchUpdateContext<T>;
 }
 

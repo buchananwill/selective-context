@@ -3,6 +3,6 @@ import {SelectiveContextGlobal} from "../../../creators/selectiveContextCreatorG
 import {DispatchUpdateContext} from "../../../types";
 
 export function useGlobalWriteAny<T>() {
-return useSelectiveContextWriteAny<T>(SelectiveContextGlobal.dispatchContext as DispatchUpdateContext<T>)
+return useSelectiveContextWriteAny<T>(SelectiveContextGlobal.dispatchUpdateContext as DispatchUpdateContext<T>)
 
 }

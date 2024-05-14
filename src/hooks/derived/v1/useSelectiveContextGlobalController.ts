@@ -13,6 +13,6 @@ export function useSelectiveContextGlobalController<T>({
         initialValue,
         SelectiveContextGlobal.listenersRefContext as ListenersRefContext<T>,
         SelectiveContextGlobal.latestValueRefContext as LatestValueRefContext<T>,
-        SelectiveContextGlobal.dispatchContext as DispatchUpdateContext<T>
+        SelectiveContextGlobal.dispatchUpdateContext as DispatchUpdateContext<T>
     );
 }

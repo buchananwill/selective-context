@@ -9,8 +9,9 @@ import {setup} from "../setup";
 import {chaoticLabel, initialFunctionLabel} from "../__fixtures__/components/FunctionListenerDiv";
 import {ClientWrapperListeners, PageListeners, SubscribeToTwoContextsKey} from "../__fixtures__/literals/listenerKeys";
 import {InitialNthValue} from "../__fixtures__/literals/constants";
-import {collatzCompressed, increment} from "../../dist/test/__fixtures__/utils/mathFunctions";
+
 import {CreateLogEntry} from "../__fixtures__/components/ReRenderListener";
+import {collatzCompressed, increment} from "../__fixtures__/utils/mathFunctions";
 
 interface UseProfilerJson {
     name: string
@@ -77,8 +78,6 @@ describe('Selective Context Demo Page', () => {
         const testDiv = screen.getByTestId(spyDivTestId);
 
         const createLogJson = getCreateLogJson(testDiv);
-
-        console.log(createLogJson)
 
         expect(testDiv).toHaveTextContent(/logentries/i)
     });

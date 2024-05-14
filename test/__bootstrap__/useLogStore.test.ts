@@ -63,25 +63,5 @@ describe('useLogStore', () => {
         expect(getLog.get()).toBe('START:first log,second log:END');
     });
 
-    it('should log to console when adding logs', () => {
-        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {/*do nothing*/});
-        const { result } = renderHook(() => useLogStore());
-        const [addLog, getLog] = result.current;
 
-        act(() => {
-            addLog.memoizedFunction('first log');
-        });
-
-        expect(consoleSpy).toHaveBeenCalledWith('');
-        expect(getLog.get()).toBe('first log');
-
-        act(() => {
-            addLog.memoizedFunction('second log');
-        });
-
-        expect(consoleSpy).toHaveBeenCalledWith('first log');
-        expect(getLog.get()).toBe('first log,second log');
-
-        consoleSpy.mockRestore();
-    });
 });

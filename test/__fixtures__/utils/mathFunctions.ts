@@ -14,7 +14,7 @@ function validateNaturalNumber(input: number) {
     if (input <= 0) throw Error(`${input} is not greater than 0.`);
 }
 
-function collatzCompressed(input: number) {
+export function collatzCompressed(input: number) {
     validateNaturalNumber(input);
 
     let output = input;
@@ -25,7 +25,7 @@ function collatzCompressed(input: number) {
     return removeTrailingZeros(output);
 }
 
-function increment(input: number) {
+export function increment(input: number) {
     validateNaturalNumber(input);
     return input + 1;
 }

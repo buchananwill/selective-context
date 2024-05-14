@@ -5,7 +5,6 @@ export function addListenerAndRetrieveLatestValue<T>(contextKey: string, listene
     if (currentListeners !== undefined) {
         if (currentListeners.has(listenerKey)) {
             throw new Error(`duplicated listener key detected: ${listenerKey}. Every listener must have a unique key within a contextKey namespace in order to receive updates.`)
-            return
         }
         currentListeners.set(listenerKey, setCurrentState)
         const latestValue = latestValueRef.current.get(contextKey);

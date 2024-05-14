@@ -25,6 +25,7 @@
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "coverage": "vitest run --coverage",
     "build": "tsc"
   },
   "license": "MIT",
@@ -55,6 +56,9 @@
     "react-json-tree": "^0.19.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "@vitest/coverage-istanbul": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0"
   }
+
 }

@@ -5,6 +5,9 @@ export default defineConfig({
         include: ['test/**/*.test.ts?(x)'],
         globals: true,
         environment: 'jsdom',
-        setupFiles: 'test/setup.ts'
+        setupFiles: 'test/setup.ts',
+        coverage: {
+            provider: 'istanbul'
+        }
     },
 });

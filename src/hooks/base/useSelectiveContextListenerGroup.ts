@@ -1,6 +1,7 @@
 import {LatestValueRefContext, ListenersRefContext, StringMap} from "../../types";
 import {Dispatch, SetStateAction, useContext, useEffect, useMemo, useState,} from "react";
-import {addListenerAndRetrieveLatestValue, getCleanUpFunction} from "./useSelectiveContextListener";
+import {addListenerAndRetrieveLatestValue} from "../../helpers/addListenerAndRetrieveLatestValue";
+import {getCleanUpFunction} from "../../helpers/getCleanUpFunction";
 
 function computeNextStringMap<T>(oldMap: StringMap<T>, key: string, replacementValue: T) {
     const newMap = new Map(oldMap); // Create a new Map with the entries of the existing Map

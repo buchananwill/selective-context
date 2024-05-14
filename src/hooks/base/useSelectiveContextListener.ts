@@ -1,23 +1,7 @@
-import {ListenersRefInterface, SelectiveListeners, StringMap} from "../../types";
-import {Context, Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useState,} from "react";
-
-export function getCleanUpFunction<T>(currentListeners: StringMap<Dispatch<SetStateAction<T>>> | undefined, listenerKey: string) {
-    return () => {
-        if (currentListeners) {
-            currentListeners.delete(listenerKey);
-        }
-    };
-}
-
-export function addListenerAndRetrieveLatestValue<T>(contextKey: string, listenerKey: string, currentListeners: SelectiveListeners<T> | undefined, latestValueRef: MutableRefObject<StringMap<T>>, setCurrentState: Dispatch<SetStateAction<T>>) {
-    if (currentListeners !== undefined) {
-        currentListeners.set(listenerKey, setCurrentState)
-        const latestValue = latestValueRef.current.get(contextKey);
-        if (latestValue !== undefined) {
-            setCurrentState(latestValue);
-        }
-    }
-}
+import {ListenersRefInterface, StringMap} from "../../types";
+import {Context, MutableRefObject, useContext, useEffect, useState,} from "react";
+import {addListenerAndRetrieveLatestValue} from "../../helpers/addListenerAndRetrieveLatestValue";
+import {getCleanUpFunction} from "../../helpers/getCleanUpFunction";
 
 export function useSelectiveContextListener<T>(
     contextKey: string,

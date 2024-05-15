@@ -26,7 +26,7 @@ const MockListener = () => {
     return <div></div>
 }
 
-const functionSpy = {spy: (proposedUpdate: unknown) => {/*Not provided yet*/}}
+const functionSpy = {spy: (proposedUpdate: unknown) => {/*Not provided yet*/ console.warn(proposedUpdate)}}
 
 const MockDispatchHookCaller = () => {
     const {dispatchWithoutListen} = useGlobalDispatch(ContextKeys.LogContent);

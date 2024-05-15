@@ -4,6 +4,7 @@ import {LatestValueRefContext, ListenersRefContext} from "../../types";
 import {addListenerAndRetrieveLatestValue} from "../../helpers/addListenerAndRetrieveLatestValue";
 import {getCleanUpFunction} from "../../helpers/getCleanUpFunction";
 import { useContext, useEffect, useState } from "react";
+import {FacadeObjectPlaceholder} from "../../creators/genericSelectiveContextCreator";
 
 export function useSelectiveContextListener<T>(
     contextKey: string,
@@ -12,32 +13,27 @@ export function useSelectiveContextListener<T>(
     listenerRefContext: ListenersRefContext<T>,
     latestValueRefContext: LatestValueRefContext<T>,
 ) {
-    const listenerRef = useContext(listenerRefContext);
+    const listenersRef = useContext(listenerRefContext);
     const latestValueRef = useContext(latestValueRefContext);
-    // let currentValue: StringMap<T>
-    // | undefined;
+    if (listenersRef === FacadeObjectPlaceholder || latestValueRef === FacadeObjectPlaceholder) {
+        throw Error(`Could not find either listeners and/or latestValue refs: ${listenersRef}, ${latestValueRef}`)
+    }
 
     const currentValue = latestValueRef.current.get(contextKey);
     let initialValue: T = fallBackValue
     if (currentValue !== undefined) {
         initialValue = currentValue
     }
-    // const initialValue =
-    //   currentValue === undefined ||
-    //   currentValue === null ||
-    //   currentValue.get(contextKey) === undefined
-    //     ? fallBackValue
-    //     : currentValue.get(contextKey);
 
     const [currentState, setCurrentState] = useState<T>(initialValue);
 
-    const safeToAddListeners = listenerRef.current !== undefined
+    const safeToAddListeners = listenersRef.current !== undefined
 
-    let currentListeners = safeToAddListeners ? listenerRef.current.get(contextKey) : undefined;
+    let currentListeners = safeToAddListeners ? listenersRef.current.get(contextKey) : undefined;
     if (currentListeners === undefined && safeToAddListeners) {
         currentListeners = new Map()
         // currentListeners.set(listenerKey, setCurrentState);// I think this is unnecessary as the effect performs the subscription.
-        listenerRef.current.set(contextKey, currentListeners);
+        listenersRef.current.set(contextKey, currentListeners);
     }
 
     useEffect(() => {

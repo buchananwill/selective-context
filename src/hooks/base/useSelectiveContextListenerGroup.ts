@@ -2,6 +2,7 @@ import {LatestValueRefContext, ListenersRefContext, StringMap} from "../../types
 import {Dispatch, SetStateAction, useContext, useEffect, useMemo, useState,} from "react";
 import {addListenerAndRetrieveLatestValue} from "../../helpers/addListenerAndRetrieveLatestValue";
 import {getCleanUpFunction} from "../../helpers/getCleanUpFunction";
+import {FacadeObjectPlaceholder} from "../../creators/genericSelectiveContextCreator";
 
 function computeNextStringMap<T>(oldMap: StringMap<T>, key: string, replacementValue: T) {
     const newMap = new Map(oldMap); // Create a new Map with the entries of the existing Map
@@ -17,8 +18,7 @@ export function useSelectiveContextListenerGroup<T>(
 ) {
     const listenersRef = useContext(listenersRefContext);
     const latestValueRef = useContext(latestValueRefContext);
-
-    if (listenersRef === undefined || latestValueRef === undefined) {
+    if (listenersRef === FacadeObjectPlaceholder || latestValueRef === FacadeObjectPlaceholder) {
         throw Error(`Could not find either listeners and/or latestValue refs: ${listenersRef}, ${latestValueRef}`)
     }
 
@@ -28,16 +28,17 @@ export function useSelectiveContextListenerGroup<T>(
     const listenerUpdateArray = useMemo(() => {
         return contextKeys.map(key => {
             const setStateAction: Dispatch<SetStateAction<T>> = (value: SetStateAction<T>) => {
-                if (value instanceof Function) {
-                    setCurrentState(stringMap => {
-                        const prev = stringMap.get(key)
-                        if (prev === undefined) {
-                            console.error(`Attempted to update '${key}' with a function but no initial value exists.`);
-                            return stringMap; // return the unchanged map if no previous value exists
-                        }
-                        const updated = value(prev);
-                        return computeNextStringMap(stringMap, key, updated)
-                    })
+                if (value instanceof Function) { // We don't actually expect to ever receive a function as this would imply the listener is computing their own state.
+                    throw Error(`Function supplied as listener update argument. Listener group should not be computing its own state: only copying the values it is subscribed to. Function supplied: ${value}`)
+                    // setCurrentState(stringMap => {
+                    //     const prev = stringMap.get(key)
+                    //     if (prev === undefined) {
+                    //         console.error(`Attempted to update '${key}' with a function but no initial value exists.`);
+                    //         return stringMap; // return the unchanged map if no previous value exists
+                    //     }
+                    //     const updated = value(prev);
+                    //     return computeNextStringMap(stringMap, key, updated)
+                    // })
 
                 } else {
                     setCurrentState(stringMap => computeNextStringMap(stringMap, key, value))
@@ -71,15 +72,6 @@ export function useSelectiveContextListenerGroup<T>(
 
             }
             addListenerAndRetrieveLatestValue(contextKey, listenerKey, currentListeners, latestValueRef, listenerUpdateArray[i])
-            // if (currentListeners !== undefined) {
-            //     currentListeners.set(listenerKey, listenerUpdateArray[i])
-            //
-            //     const currentValue = latestValueRef.current.get(contextKey);
-            //
-            //     if (currentValue !== undefined) {
-            //         listenerUpdateArray[i](() => currentValue);
-            //     }
-            // }
         }
 
         const listeners = listenersRef.current
@@ -89,10 +81,6 @@ export function useSelectiveContextListenerGroup<T>(
             for (const contextKey of contextKeys) {
                 const listenersMap = listeners.get(contextKey);
                 cleanUpHookArray.push(getCleanUpFunction(listenersMap, listenerKey))
-                // if (listenersMap !== undefined) {
-                //     listenersMap.delete(listenerKey);
-                // }
-
             }
 
         return () => cleanUpHookArray.forEach(fn => fn())

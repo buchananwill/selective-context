@@ -19,8 +19,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "files": [
-    "dist/**/*",
-    "src"
+    "dist/**/*"
   ],
   "scripts": {
     "test": "vitest",

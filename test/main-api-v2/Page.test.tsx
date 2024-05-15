@@ -1,58 +1,36 @@
-import {render, screen} from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
 import Page from "../__fixtures__/Page";
-import React from "react";
+import React, {ReactNode} from "react";
 import {expect} from "vitest";
 import '@testing-library/jest-dom/vitest'
 import PrintableListenerDiv from "../__fixtures__/components/PrintableListenerDiv";
-import {ContextKeys} from "../__fixtures__/literals/contextKeys";
+import {ContextKeys, NthTerm} from "../__fixtures__/literals/contextKeys";
 import {setup} from "../setup";
 import {chaoticLabel, initialFunctionLabel} from "../__fixtures__/components/FunctionListenerDiv";
 import {ClientWrapperListeners, PageListeners, SubscribeToTwoContextsKey} from "../__fixtures__/literals/listenerKeys";
 import {InitialNthValue} from "../__fixtures__/literals/constants";
-
-import {CreateLogEntry} from "../__fixtures__/components/ReRenderListener";
 import {collatzCompressed, increment} from "../__fixtures__/utils/mathFunctions";
-
-interface UseProfilerJson {
-    name: string
-    logEntries: UseProfilerEntry[]
-}
-interface CreateLogJson {
-    name: string
-    logEntries: CreateLogEntry[]
-}
-
-interface CreateLogEntry {
-    parentComponent: string;
-    renderCount: number
-}
-
-interface UseProfilerEntry {
-    id: string;
-    phase: "mount" | "update" | "nested-update";
-    actualDuration: number;
-    baseDuration: number;
-    startTime: number;
-    commitTime: number
-}
+import {CreateLogJson, UseProfilerJson} from "./logTypes";
+import {choicesArray, readAnyDropdown} from "../__fixtures__/components/ReadAnyButton";
 
 
 export const UseProfiler = 'useProfiler';
+const spyDivTestId = 'spy-div';
 
-const setupPage = () => setup(
+const setupPage = (AdditionalSpy?: () => ReactNode) => setup(
     <Page>
         <PrintableListenerDiv contextKey={ContextKeys.LogContent} listenerKey={spyDivTestId} initialValue={''}
                               data-testid={spyDivTestId}/>
-
+        {AdditionalSpy && <AdditionalSpy/>}
     </Page>
 );
 
-const spyDivTestId = 'spy-div';
 
 function getUserProfilerJson(spyDiv: HTMLElement) {
     const logJson: UseProfilerJson = JSON.parse(spyDiv.textContent ?? '');
     return logJson;
 }
+
 function getCreateLogJson(spyDiv: HTMLElement) {
     const logJson: CreateLogJson = JSON.parse(spyDiv.textContent ?? '');
     return logJson;
@@ -76,9 +54,7 @@ describe('Selective Context Demo Page', () => {
         const updateLogButton = screen.getByTestId(ClientWrapperListeners.updateLogButton);
         await user.click(updateLogButton)
         const testDiv = screen.getByTestId(spyDivTestId);
-
-        const createLogJson = getCreateLogJson(testDiv);
-
+        getCreateLogJson(testDiv);
         expect(testDiv).toHaveTextContent(/logentries/i)
     });
 
@@ -95,24 +71,29 @@ describe('Selective Context Demo Page', () => {
 
     it('should apply the initial function, then the other function, to the initial value', async () => {
         const {user} = setupPage();
-        const numberDiv = screen.getByTestId(PageListeners.numberDiv);
+        const numberInput = screen.getByTestId(PageListeners.numberDiv) as HTMLInputElement;
+
+        const currentNumber = () => {
+            return parseInt(numberInput.value, 10)
+        }
+
 
         // initial
         let comparisonValue = InitialNthValue
-        expect(numberDiv).toHaveTextContent(`${comparisonValue}`)
+        expect(currentNumber()).toEqual(comparisonValue)
 
         // first mutation
         comparisonValue = increment(comparisonValue)
         const applyMathFunction = screen.getByTestId(ClientWrapperListeners.applyFunctionButton);
         await user.click(applyMathFunction)
-        expect(numberDiv).toHaveTextContent(`${comparisonValue}`)
+        expect(currentNumber()).toEqual(comparisonValue)
 
         // other mutation
         comparisonValue = collatzCompressed(comparisonValue)
         const swapFunctionButton = screen.getByTestId(ClientWrapperListeners.swapFunctionButton);
         await user.click(swapFunctionButton)
         await user.click(applyMathFunction)
-        expect(numberDiv).toHaveTextContent(`${comparisonValue}`)
+        expect(currentNumber()).toEqual(comparisonValue)
     });
 
     it('should re-render SubscribeToToContexts on the swap and apply button presses', async () => {
@@ -145,6 +126,49 @@ describe('Selective Context Demo Page', () => {
         logJson = getUserProfilerJson(spyDiv);
         useProfilerEntries = logJson.logEntries.filter(entry => entry.id === SubscribeToTwoContextsKey);
         expect(useProfilerEntries).length(4) // Second re-render
+    });
+
+    it('should display the number value in the ReadAny div', async () => {
+
+        
+        const {user} = setupPage();
+        const numberInput = screen.getByTestId(PageListeners.numberDiv) as HTMLInputElement;
+        const readAnyDiv = screen.getByTestId(PageListeners.readAnyDiv);
+        const readAnyDropdownButton = screen.getByTestId(readAnyDropdown);
+
+        // click the dropdown
+        await user.click(readAnyDropdownButton)
+
+        // Find the options
+        const options = screen.getAllByRole('option');
+
+        expect(options.length).toBe(choicesArray.length)
+
+        // Find the nthTermOption
+        const nthTermOption = options.find(option => option.id === NthTerm);
+
+        if (nthTermOption) {
+            await user.selectOptions(readAnyDropdownButton, nthTermOption)
+
+            // Check if the correct option is selected
+            await waitFor(() => {
+                expect((nthTermOption as HTMLOptionElement).selected).toBe(true);
+            });
+        } else {
+            throw new Error('could not find nthTerm option')
+        }
+
+        // Ensure the select element now has the right value selected
+        const selectedOption = screen.getByRole('option', { selected: true });
+
+        // Check if the correct option is selected
+        expect(selectedOption.id).toEqual(NthTerm);
+
+        // Verify the change in div content value as well
+        await waitFor(() => {
+            expect(readAnyDiv.textContent).toEqual(numberInput.value)
+        })
+
     });
 
 

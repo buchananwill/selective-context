@@ -12,7 +12,8 @@ export const choicesArray = Object.values(ContextKeys).filter(
   (value) => value !== ContextKeys.LogContent,
 );
 
-const readAnyDropdown = 'read-any-dropdown';
+export const readAnyDropdown = 'read-any-dropdown';
+
 export default function ReadAnyButton() {
   const globalRead = useGlobalReadAny<string>();
   const { dispatchWithoutListen } = useGlobalDispatch(metaContextKey);
@@ -28,10 +29,10 @@ export default function ReadAnyButton() {
             dispatchWithoutListen(`${globalRead(e.target.value)}`);
           }}
           className={'outline-blue-400 outline-offset-2 hover:opacity-75 bg-sky-100 rounded-lg p-1 cursor-pointer'}
-          data-testid={'select-read-target'}
+          data-testid={readAnyDropdown}
         >
           {choicesArray.map((choice) => (
-            <option key={choice} value={choice} className={'p-1'}>
+            <option id={choice} key={choice} value={choice} className={'p-1'}>
               {choice}
             </option>
           ))}

@@ -9,22 +9,24 @@ import {
     UpdateAction,
 } from "../types";
 
-const emptyRefObject = <T>(): MutableRefObject<StringMap<T>> => ({
-    current: new Map<string, T>()
-});
+// const emptyRefObject = <T>(): MutableRefObject<StringMap<T>> => ({
+//     current: new Map<string, T>()
+// });
 
+export const FacadeObjectPlaceholder = {} as const
 
+export const defaultFunctionWarningMessage = 'Dispatch function has been called before being defined.';
 const warnDispatchIsUndefined = () => {
-    console.warn('Dispatch function has been called before being defined.')
+    console.warn(defaultFunctionWarningMessage)
 }
 
 export function createSelectiveContext<T>(): SelectiveContext<T> {
     const latestValueRefContext = createContext<
         MutableRefObject<StringMap<T>>
-    >(emptyRefObject());
+    >(FacadeObjectPlaceholder as MutableRefObject<StringMap<T>>);
     const listenersRefContext = createContext<
         MutableRefObject<ListenersRefInterface<T>>
-    >(emptyRefObject());
+    >(FacadeObjectPlaceholder as MutableRefObject<ListenersRefInterface<T>>);
     const dispatchUpdateContext = createContext<Dispatch<UpdateAction<T>>>(warnDispatchIsUndefined);
     return {latestValueRefContext, listenersRefContext, dispatchUpdateContext};
 }

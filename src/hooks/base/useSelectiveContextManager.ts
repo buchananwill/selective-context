@@ -8,7 +8,7 @@ export function useSelectiveContextManager<T>(
     const listenerRef = useRef<ListenersRefInterface<T>>(new Map());
     const latestValueRef = useRef(initialContext);
 
-    const intervalClearRef = useRef<NodeJS.Timeout>();
+    const intervalClearRef = useRef<number>();
 
     useIntervalToClearValuesWithNoListeners(listenerRef, latestValueRef, intervalClearRef);
 

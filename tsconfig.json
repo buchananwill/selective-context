@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",                                  // Specify ECMAScript target version
+    "lib": ["dom", "es2017"],
     "module": "es6",                             // Specify module code generation
     "declaration": true,                              // Generates corresponding '.d.ts' file.
     "outDir": "./dist",                               // Redirect output structure to the directory

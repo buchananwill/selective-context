@@ -4,13 +4,13 @@ import {ListenersRefInterface} from "../../types";
 export function useIntervalToClearValuesWithNoListeners<T>(
     listenersRef: MutableRefObject<ListenersRefInterface<T>>,
     latestValueRef: MutableRefObject<Map<string, T>>,
-    intervalClearRef: MutableRefObject<NodeJS.Timeout | undefined>, 
+    intervalClearRef: MutableRefObject<number | undefined>,
     timeout = 30_000
 ) {
     useEffect(() => {
         const cachedListenerRef = listenersRef.current;
         const cachedValueRef = latestValueRef.current;
-        intervalClearRef.current = setInterval(() => {
+        intervalClearRef.current = window.setInterval(() => {
             const setOfContextKeysToDelete = new Set<string>();
             for (const [contextKey] of cachedValueRef) {
                 const listenerMap = cachedListenerRef.get(contextKey);
@@ -27,7 +27,7 @@ export function useIntervalToClearValuesWithNoListeners<T>(
 
         }, timeout);
         return () => {
-            if (intervalClearRef.current) clearInterval(intervalClearRef.current);
+            if (intervalClearRef.current) window.clearInterval(intervalClearRef.current);
         };
     }, [listenersRef, latestValueRef, intervalClearRef]);
 }

@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   main:
-    name: Validate and Deploy
+    name: Validate
     runs-on: ubuntu-latest
 
     env:
@@ -38,7 +38,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: 9
           run_install: false

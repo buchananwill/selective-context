@@ -1,10 +1,7 @@
-
-
-import { describe, it, expect, vi } from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {useLogStore} from "../__fixtures__/utils/useLogStore";
 import {renderHook} from "@testing-library/react";
-import React, {useState, act} from "react";
-
+import React, {act, useState} from "react";
 
 
 const {result} = renderHook(() => {

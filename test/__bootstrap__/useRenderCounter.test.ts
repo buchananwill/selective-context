@@ -1,6 +1,4 @@
-
-
-import { describe, it, expect, vi } from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {useRenderCounter} from "../__fixtures__/utils/useRenderCounter";
 import {renderHook} from "@testing-library/react";
 

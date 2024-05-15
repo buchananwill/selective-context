@@ -10,7 +10,7 @@ import {chaoticLabel, initialFunctionLabel} from "../__fixtures__/components/Fun
 import {ClientWrapperListeners, PageListeners, SubscribeToTwoContextsKey} from "../__fixtures__/literals/listenerKeys";
 import {InitialNthValue} from "../__fixtures__/literals/constants";
 import {collatzCompressed, increment} from "../__fixtures__/utils/mathFunctions";
-import {CreateLogJson, UseProfilerJson} from "./logTypes";
+import {CreateLogJson, UseProfilerJson} from "../__fixtures__/logTypes";
 import {choicesArray, readAnyDropdown} from "../__fixtures__/components/ReadAnyButton";
 import {headerButton} from "../__fixtures__/components/HeaderResetsPage";
 

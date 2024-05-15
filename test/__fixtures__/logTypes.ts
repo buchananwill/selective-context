@@ -1,4 +1,4 @@
-import {CreateLogEntry} from "../__fixtures__/components/ReRenderListener";
+import {CreateLogEntry} from "./components/ReRenderListener";
 
 export interface UseProfilerJson {
     name: string

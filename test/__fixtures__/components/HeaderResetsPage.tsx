@@ -13,11 +13,11 @@ export const headerButton = "header-button";
 export default function HeaderResetsPage({
   children,className
 }: Pick<GenericButtonProps, "children" | 'className'>) {
-  let { dispatchWriteAny } = useGlobalWriteAny();
+  const { dispatchWriteAny } = useGlobalWriteAny();
   useLogStore();
 
   const resetCallback = useCallback(() => {
-    let [addLog, getLog] = createLogStore(wrapper);
+    const [addLog, getLog] = createLogStore(wrapper);
     dispatchWriteAny(NthTerm, 27);
     dispatchWriteAny(LogContent, "{}");
     dispatchWriteAny(ContextKeys.FunctionContextKey, initialFunction);

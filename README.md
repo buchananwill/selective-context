@@ -92,7 +92,7 @@ There is also a generic `ControllerComponent` which simply takes a `contextKey` 
 ### Example Dispatch 
 
 ``` 
-import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
+import {ObjectPlaceholder, useGlobalDispatch, } from "selective-context";
 import {Person} from "@/app/data";
 
 export default function PersonDispatch({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
@@ -118,7 +118,7 @@ This hook is useful for components which do not need to know anything about the 
 ### Example Listener
 
 ``` 
-import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
+import {ObjectPlaceholder, useGlobalListener, } from "selective-context";
 
 import {Person} from "@/app/data";
 
@@ -137,10 +137,10 @@ currentState: Current state value.
 
 Re-renders when this state changes.
 
-### Example Dispatch
+### Example DispatchAndListener
 
 ``` 
-import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
+import {ObjectPlaceholder, useGlobalDispatchAndListener, } from "selective-context";
 import {Person} from "@/app/data";
 
 export default function PersonDispatch({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
@@ -186,10 +186,10 @@ export default function PersonGroupListener({
 }: {
   contextKeys: string[];
 }) {
-  let { currentState } = useSelectiveContextListenerGroupGlobal<Person>({
+  let { currentState } = useGlobalListenerGroup<Person>({
     contextKeys,
     listenerKey: "personGroup",
-    initialValue: ObjectPlaceholder,
+    initialValue: new Map(),
   });
   return (
     <ul>

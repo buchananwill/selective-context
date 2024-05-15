@@ -27,7 +27,7 @@ export function useSelectiveContextManager<T>(
         let newValue = currentElement;
         if (update instanceof Function) {
             if (currentElement === undefined) {
-                console.warn(`No current value for '${contextKey}' when trying to apply an update function.`)
+                console.warn(`No current value for '${contextKey}' when trying to apply an update function.`, update)
                 throw new Error(`Cannot apply update function: no current value exists for '${contextKey}'.`);
             }
             newValue = update(currentElement);

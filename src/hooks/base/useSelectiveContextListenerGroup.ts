@@ -28,18 +28,7 @@ export function useSelectiveContextListenerGroup<T>(
     const listenerUpdateArray = useMemo(() => {
         return contextKeys.map(key => {
             const setStateAction: Dispatch<SetStateAction<T>> = (value: SetStateAction<T>) => {
-                if (value instanceof Function) { // We don't actually expect to ever receive a function as this would imply the listener is computing their own state.
-                    throw Error(`Function supplied as listener update argument. Listener group should not be computing its own state: only copying the values it is subscribed to. Function supplied: ${value}`)
-                    // setCurrentState(stringMap => {
-                    //     const prev = stringMap.get(key)
-                    //     if (prev === undefined) {
-                    //         console.error(`Attempted to update '${key}' with a function but no initial value exists.`);
-                    //         return stringMap; // return the unchanged map if no previous value exists
-                    //     }
-                    //     const updated = value(prev);
-                    //     return computeNextStringMap(stringMap, key, updated)
-                    // })
-
+                if (value instanceof Function) { throw Error(`Function supplied as listener update argument. Listener group should not be computing its own state: only copying the values it is subscribed to. Function supplied: ${value}`)
                 } else {
                     setCurrentState(stringMap => computeNextStringMap(stringMap, key, value))
                 }

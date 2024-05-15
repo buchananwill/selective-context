@@ -9,6 +9,7 @@ import ReadAnyDiv from "./components/ReadAnyDiv";
 import SubscribeToTwoContexts from "./components/SubscribeToTwoContexts";
 import {PageListeners} from "./literals/listenerKeys";
 import ControlledNumberInput from "./components/ControlledNumberInput";
+import HeaderResetsPage from "./components/HeaderResetsPage";
 
 
 const someDivClassNames = 'border-2 rounded-lg place-content-center justify-center flex items-center p-1';
@@ -22,8 +23,14 @@ export default function Page({children}: PropsWithChildren) {
                     contextKey={NthTerm}
                     initialValue={InitialNthValue}
                 />
-                <h1 className={'text-lg font-semibold drop-shadow border-8 rounded-lg p-4 text-center mx-8 block mb-8'}>Selective
-                    Context Demo</h1>
+                <div className={'w-full flex justify-center p-2'}>
+                    <HeaderResetsPage
+                        className={
+                            "text-lg font-semibold drop-shadow border-8 rounded-lg p-4 text-center block w-[90vw] bg-gradient-to-br hover:opacity-75 from-rose-200 to-purple-300 hover:border-rose-300 border-rose-100 duration-500 transition-all"
+                        }
+                    >
+                        Selective Context Demo
+                    </HeaderResetsPage></div>
                 <div className={"grid gap-2 grid-cols-5 px-16"}>
 
                     <ClientWrapper>

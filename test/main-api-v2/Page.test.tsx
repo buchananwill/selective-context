@@ -12,6 +12,7 @@ import {InitialNthValue} from "../__fixtures__/literals/constants";
 import {collatzCompressed, increment} from "../__fixtures__/utils/mathFunctions";
 import {CreateLogJson, UseProfilerJson} from "./logTypes";
 import {choicesArray, readAnyDropdown} from "../__fixtures__/components/ReadAnyButton";
+import {headerButton} from "../__fixtures__/components/HeaderResetsPage";
 
 
 export const UseProfiler = 'useProfiler';
@@ -36,13 +37,20 @@ function getCreateLogJson(spyDiv: HTMLElement) {
     return logJson;
 }
 
+function getMathButtons() {
+    // get buttons
+    const applyMathFunction = screen.getByTestId(ClientWrapperListeners.applyFunctionButton);
+    const swapFunctionButton = screen.getByTestId(ClientWrapperListeners.swapFunctionButton);
+    return {applyMathFunction, swapFunctionButton};
+}
+
 describe('Selective Context Demo Page', () => {
     it('should render the root page.', () => {
 
         const result = render(<Page/>);
         expect(result).toBeDefined()
 
-        const heading = screen.getByRole('heading');
+        const heading = screen.getByTestId(headerButton);
         expect(heading).toBeInTheDocument()
         expect(heading).toHaveTextContent(/selective context/i)
 
@@ -107,10 +115,7 @@ describe('Selective Context Demo Page', () => {
         let logJson = getUserProfilerJson(spyDiv);
         let useProfilerEntries = logJson.logEntries.filter(entry => entry.id === SubscribeToTwoContextsKey);
         expect(useProfilerEntries).length(2) // Mount, update with retrieved subscriptions
-
-        // get buttons
-        const applyMathFunction = screen.getByTestId(ClientWrapperListeners.applyFunctionButton);
-        const swapFunctionButton = screen.getByTestId(ClientWrapperListeners.swapFunctionButton);
+        const {applyMathFunction, swapFunctionButton} = getMathButtons();
         // click them
 
         // swap,
@@ -168,6 +173,31 @@ describe('Selective Context Demo Page', () => {
         await waitFor(() => {
             expect(readAnyDiv.textContent).toEqual(numberInput.value)
         })
+
+    });
+
+    it('should reset the log content, number value and math function.', async () => {
+        const {user} = setupPage();
+        const heading = screen.getByTestId(headerButton);
+        const updateLogButton = screen.getByTestId(ClientWrapperListeners.updateLogButton);
+        const numberInput = screen.getByTestId(PageListeners.numberDiv) as HTMLInputElement;
+        const spyDiv = screen.getByTestId(spyDivTestId);
+        const functionTypeLabel = screen.getByTestId(ClientWrapperListeners.functionalListenerDiv);
+        const {applyMathFunction, swapFunctionButton} = getMathButtons();
+
+        const currentNumber = () => {
+            return parseInt(numberInput.value, 10)
+        }
+
+        await user.click(updateLogButton)
+        await user.click(swapFunctionButton)
+        await user.click(applyMathFunction)
+        await user.click(heading)
+
+        expect(currentNumber()).toEqual(InitialNthValue)
+        expect(spyDiv.textContent).toBe('{}')
+        expect(functionTypeLabel.textContent).toBe(initialFunctionLabel)
+
 
     });
 

@@ -10,7 +10,7 @@ import {defaultFunctionWarningMessage} from "../../src/creators/genericSelective
 
 
 const contextKeys = [ContextKeys.LogContent, ContextKeys.FunctionListenerPrintout];
-const ContextLessGroupHookCaller = () => {
+const MockGroupListener = () => {
     useSelectiveContextListenerGroup(
         contextKeys,
         'sadPath',
@@ -20,15 +20,23 @@ const ContextLessGroupHookCaller = () => {
 
     return <div></div>
 }
-const ContextLessHookCaller = () => {
+const MockListener = () => {
     useGlobalListener({contextKey: ContextKeys.LogContent, listenerKey: 'sadPath', initialValue: 'test'})
 
     return <div></div>
 }
-const ContextLessDispatchHookCaller = () => {
-    const {dispatchWithoutListen} = useGlobalDispatch(ContextKeys.LogContent);
 
+const functionSpy = {spy: (proposedUpdate: unknown) => {/*Not provided yet*/}}
+
+const MockDispatchHookCaller = () => {
+    const {dispatchWithoutListen} = useGlobalDispatch(ContextKeys.LogContent);
     dispatchWithoutListen('test')
+
+    return <div></div>
+}
+const MockDispatchHookSmuggler = () => {
+    const {dispatchWithoutListen} = useGlobalDispatch(ContextKeys.LogContent);
+    functionSpy.spy = dispatchWithoutListen
 
     return <div></div>
 }
@@ -36,20 +44,20 @@ const ContextLessDispatchHookCaller = () => {
 describe('Absence of context when calling listener hook', () => {
     it('should throw an error without the context available for listeners', () => {
         expect(() => render(
-            <ContextLessHookCaller></ContextLessHookCaller>
+            <MockListener></MockListener>
         )).toThrow(Error)
     });
 
     it('should throw an error without the context available for listener groups', () => {
         expect(() => render(
-            <ContextLessGroupHookCaller></ContextLessGroupHookCaller>
+            <MockGroupListener></MockGroupListener>
         )).toThrow(Error)
     });
 
     it('should render the listener group and setup its own listener maps', () => {
         const renderedNode = render(
             <SelectiveContextManagerGlobal>
-                <ContextLessGroupHookCaller></ContextLessGroupHookCaller>
+                <MockGroupListener></MockGroupListener>
             </SelectiveContextManagerGlobal>
         );
 
@@ -57,14 +65,31 @@ describe('Absence of context when calling listener hook', () => {
     });
 });
 
-describe('Absence of context when calling dispatchWithoutListen', () => {
+describe('Edge cases of dispatchWithoutListen', () => {
 
     it('should throw an error trying to call the default function', () => {
         let collectedArgs: [][] = []
         const consoleSpy = vi.spyOn(console, 'warn').mockImplementation((args) => {collectedArgs = [...collectedArgs, args]});
-        render(<ContextLessDispatchHookCaller></ContextLessDispatchHookCaller>)
+        render(<MockDispatchHookCaller></MockDispatchHookCaller>)
         expect(consoleSpy).toBeCalledTimes(1);
         expect(collectedArgs[0]).toEqual(defaultFunctionWarningMessage)
+    });
 
+    it('should throw an error trying to use a functional update when there is no previous value', () => {
+        let collectedArgs: [][] = []
+        const consoleSpy = vi.spyOn(console, 'warn').mockImplementation((args) => {collectedArgs = [...collectedArgs, args]});
+        expect(() => {
+                render(
+                    <SelectiveContextManagerGlobal>
+                        <MockListener></MockListener>
+                        <MockDispatchHookSmuggler></MockDispatchHookSmuggler>
+                    </SelectiveContextManagerGlobal>
+                )
+                functionSpy.spy((prev: number) => prev + 1)
+            }
+
+        ).toThrowError()
+        expect(consoleSpy).toBeCalledTimes(1);
+        expect(collectedArgs[0]).toMatch(/no current value/i)
     });
 })

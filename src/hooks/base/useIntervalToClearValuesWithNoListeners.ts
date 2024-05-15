@@ -24,18 +24,10 @@ export function useIntervalToClearValuesWithNoListeners<T>(
             for (const keyToDelete of setOfContextKeysToDelete) {
                 cachedValueRef.delete(keyToDelete)
             }
-            
-            // for (const [contextKey, listeners] of cachedListenerRef.entries()) {
-            //     if (
-            //         listeners.size === 0 &&
-            //         cachedValueRef.get(contextKey) !== undefined
-            //     ) {
-            //         cachedValueRef.delete(contextKey)
-            //     }
-            // }
+
         }, timeout);
         return () => {
-            clearInterval(intervalClearRef.current);
+            if (intervalClearRef.current) clearInterval(intervalClearRef.current);
         };
     }, [listenersRef, latestValueRef, intervalClearRef]);
 }

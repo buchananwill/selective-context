@@ -23,8 +23,8 @@ jobs:
       CI: true
 
     steps:
-      - name: Setup timezone
-        uses: zcong1993/setup-timezone@master
+      - name: Set Timezone
+        uses: szenius/set-timezone@v2.0
         with:
           timezone: Europe/London
 
@@ -34,7 +34,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install pnpm

@@ -27,7 +27,7 @@ export const theme = {
     base08: '#ef4444',
     base09: '#fb923c',
     base0A: '#fde047',
-    base0B: '#6ee7b7',
+    base0B: '#10de81',
     base0C: '#67e8f9',
     base0D: '#93c5fd',
     base0E: '#d8b4fe',

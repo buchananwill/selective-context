@@ -1,3 +1,8 @@
+[![codecov](https://codecov.io/github/buchananwill/selective-context/branch/main/graph/badge.svg?token=UGS600FP3U)](https://codecov.io/github/buchananwill/selective-context)
+[![CI](https://github.com/buchananwill/selective-context/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/buchananwill/selective-context/actions/workflows/main.yml)
+![NPM Version](https://img.shields.io/npm/v/selective-context?color=%2351B88C)
+
+
 # React Selective Context
 This package provides an efficient state management framework using React context, allowing components to manage and subscribe to global state changes selectively.
 
@@ -29,28 +34,30 @@ return (
 
 ## Using Hooks
 
-Three hooks are available:
+Four hooks are available to use this context:
 
-1. useSelectiveContextGlobalController
-2. useSelectiveContextGlobalDispatch
-3. useSelectiveContextGlobalListener
+1. useGlobalController
+2. useGlobalDispatch
+3. useGlobalListener
+4. useGlobalDispatchAndListener
 
 Each can do the following:
 
 |            | Initialize a variable | Read access | Write access |
-|------------|-----------------------| ----------- |--------------|
-| Controller | Y                     |           Y | Y            |
-| Dispatch   | N                     |           Y | Y            |
-| Listener   | N                     |           Y | N            |
+|------------|-----------------------|-------------|--------------|
+| Controller | Y                     | Y           | Y            |
+| Dispatch   | N                     | N           | Y            |
+| Listener   | N                     | Y           | N            |
+| D-and-L    | N                     | Y           | Y            |
 
 ## Example controller:
 ```
 'use client'
 import {Person} from "@/app/data";
-import {useSelectiveContextGlobalController} from "selective-context";
+import {useGlobalController} from "selective-context";
 
 export default function PersonController({person}:{person: Person}) {
-    let {currentState, dispatch} = useSelectiveContextGlobalController<Person>({
+    let {currentState, dispatch} = useGlobalController<Person>({
         contextKey: 'controlledPerson',
         initialValue: person,
         listenerKey: 'controller'
@@ -80,14 +87,64 @@ initialValue: Initial value of the state slice.
   - T 
   - a function to mutate T.
 
-### Example Dispatcher 
+There is also a generic `ControllerComponent` which simply takes a `contextKey` and `initialValue` prop, and calls the hook internally with `'controller'` as the `listenerKey`. It is useful for splitting an array of state values to initialize them independently. 
+
+### Example Dispatch 
 
 ``` 
 import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
 import {Person} from "@/app/data";
 
 export default function PersonDispatch({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
-    let {currentState,dispatchWithoutControl} = useSelectiveContextGlobalDispatch<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
+    const {dispatchWithoutControl} = useGlobalDispatch<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
+
+    const handleClick = () => dispatchWithoutControl(personInState =>
+        ({...personInState, age: (personInState.age + 1) })
+    )
+
+    return <button onClick={handleClick}>
+        Grow older!
+    </button>
+
+}
+```
+
+Returns:
+
+- dispatchWithoutControl: Function to update the state, as the Controller.
+
+This hook is useful for components which do not need to know anything about the state in order to initiate an action on it, as they will not re-render in response to the state changing.
+
+### Example Listener
+
+``` 
+import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
+
+import {Person} from "@/app/data";
+
+export default function PersonListener({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
+    let {currentState} = useGlobalListener<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
+
+    return <div>{currentState.name}</div>
+}
+```
+
+Listens to changes in a specific slice of the global state.
+
+Returns:
+
+currentState: Current state value.
+
+Re-renders when this state changes.
+
+### Example Dispatch
+
+``` 
+import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
+import {Person} from "@/app/data";
+
+export default function PersonDispatch({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
+    let {currentState, dispatchWithoutControl} = useGlobalDispatchAndListener<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
 
     const handleClick = () => dispatchWithoutControl(personInState =>
         ({...personInState, name: `${personInState.name}ib`})
@@ -105,25 +162,7 @@ Returns:
 - currentState: Current state value.
 - dispatchWithoutControl: Function to update the state, as the Controller..
 
-### Example Listener
-
-``` 
-import {ObjectPlaceholder, useSelectiveContextGlobalListener, } from "selective-context";
-
-import {Person} from "@/app/data";
-
-export default function PersonListener({contextKey, listenerKey}:{contextKey: string; listenerKey: string}) {
-    let {currentState} = useSelectiveContextGlobalListener<Person>({contextKey, listenerKey, initialValue: ObjectPlaceholder as Person});
-
-    return <div>{currentState.name}</div>
-}
-```
-
-Listens to changes in a specific slice of the global state.
-
-Returns:
-
-currentState: Current state value.
+This hook combines the actions of the other two hooks, both listening to and updating the state via user interaction.
 
 ## Advanced: Group Listening
 

@@ -1,6 +1,6 @@
 {
   "name": "selective-context",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A key-value store using React context, refs and hooks.",
   "author": "Will Buchanan <willwritescode@gmail.com",
   "repository": {

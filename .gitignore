@@ -27,3 +27,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/.idea/prettier.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/runConfigurations/Run_all_tests.xml

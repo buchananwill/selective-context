@@ -104,7 +104,7 @@ describe('Selective Context Demo Page', () => {
         expect(currentNumber()).toEqual(comparisonValue)
     });
 
-    it('should re-render SubscribeToToContexts on the swap and apply button presses', async () => {
+    it('should re-render SubscribeToTwoContexts on the swap and apply button presses', async () => {
         const {user} = setupPage();
         const spyDiv = screen.getByTestId(spyDivTestId);
         const updateLogButton = screen.getByTestId(ClientWrapperListeners.updateLogButton);
@@ -114,7 +114,7 @@ describe('Selective Context Demo Page', () => {
         await user.click(updateLogButton)
         let logJson = getUserProfilerJson(spyDiv);
         let useProfilerEntries = logJson.logEntries.filter(entry => entry.id === SubscribeToTwoContextsKey);
-        expect(useProfilerEntries).length(2) // Mount, update with retrieved subscriptions
+        expect(useProfilerEntries).length(1) // Mount, update with retrieved subscriptions NOW: 1, after commenting out the direct ref setting lines. Which render has gone?
         const {applyMathFunction, swapFunctionButton} = getMathButtons();
         // click them
 
@@ -123,14 +123,14 @@ describe('Selective Context Demo Page', () => {
         await user.click(updateLogButton)
         logJson = getUserProfilerJson(spyDiv);
         useProfilerEntries = logJson.logEntries.filter(entry => entry.id === SubscribeToTwoContextsKey);
-        expect(useProfilerEntries).length(3) // First re-render
+        expect(useProfilerEntries).length(2) // First re-render
 
         // apply.
         await user.click(applyMathFunction)
         await user.click(updateLogButton)
         logJson = getUserProfilerJson(spyDiv);
         useProfilerEntries = logJson.logEntries.filter(entry => entry.id === SubscribeToTwoContextsKey);
-        expect(useProfilerEntries).length(4) // Second re-render
+        expect(useProfilerEntries).length(3) // Second re-render
     });
 
     it('should display the number value in the ReadAny div', async () => {

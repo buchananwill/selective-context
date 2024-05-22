@@ -13,15 +13,13 @@ export function useSelectiveContextController<T>(
     latestValueRefContext: LatestValueRefContext<T>,
     dispatchUpdateContext: DispatchUpdateContext<T>,
 ) {
-    const {currentState, latestValueRef} = useSelectiveContextListener(
+    const {currentState} = useSelectiveContextListener(
         contextKey,
         listenerKey,
         initialValue,
         listenersRefContext,
         latestValueRefContext,
     );
-
-    const valueMap = latestValueRef.current;
 
     const dispatchUpdate = useContext(dispatchUpdateContext);
 
@@ -33,6 +31,7 @@ export function useSelectiveContextController<T>(
     /*
   // I think these lines are messing up the listener propagation when controller mounts second. CORRECT.
   // REMOVE AFTER COMMIT.
+  // TODO write a test to capture this scenario: a listener mounts before a controller.
     if (valueMap.get(contextKey) === undefined) {
       valueMap.set(contextKey, initialValue)
     }

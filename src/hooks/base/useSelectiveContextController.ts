@@ -5,6 +5,9 @@ import {useSelectiveContextListener} from "./useSelectiveContextListener";
 import {DispatchUpdateContext, LatestValueRefContext, ListenersRefContext} from "../../types";
 import {SetStateAction, useCallback, useContext, useEffect, useState} from "react";
 
+/**
+ * The controller does not by default synchronize its state to its initial value (doing so locks the state to read-only).
+ * */
 export function useSelectiveContextController<T>(
     contextKey: string,
     listenerKey: string,

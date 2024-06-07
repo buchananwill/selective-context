@@ -8,6 +8,8 @@ export function addListenerAndRetrieveLatestValue<T>(contextKey: string, listene
         }
         currentListeners.set(listenerKey, setCurrentState)
         const latestValue = latestValueRef.current.get(contextKey);
+        // TODO: This conditional prevents the listener's state from retrieving undefined, EVEN WHEN DESIRED BY THE CLIENT.
+        // TODO: Refactor return types to allow undefined.
         if (latestValue !== undefined) {
             setCurrentState(latestValue);
         }

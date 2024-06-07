@@ -32,20 +32,12 @@ export function useSelectiveContextListener<T>(
     let currentListeners = safeToAddListeners ? listenersRef.current.get(contextKey) : undefined;
     if (currentListeners === undefined && safeToAddListeners) {
         currentListeners = new Map()
-        // currentListeners.set(listenerKey, setCurrentState);// I think this is unnecessary as the effect performs the subscription.
         listenersRef.current.set(contextKey, currentListeners);
     }
 
     useEffect(() => {
         addListenerAndRetrieveLatestValue(contextKey, listenerKey, currentListeners, latestValueRef, setCurrentState)
-        // if (currentListeners !== undefined) {
-        // currentListeners.set(listenerKey, setCurrentState)
-        //   const latestValue = latestValueRef.current.get(contextKey);
-        // if (latestValue !== undefined) {
-        //   setCurrentState(latestValue);
-        // }
-        //
-        // }
+
         return getCleanUpFunction(currentListeners, listenerKey);
     }, [currentListeners, contextKey, listenerKey, latestValueRef]);
 
